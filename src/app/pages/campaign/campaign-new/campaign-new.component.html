@@ -470,12 +470,12 @@
           </div>
           <h2 class="prod-name mt-6">{{ campaign.name }}</h2>
           <ul class="socials mt-4">
-            <li *ngFor="let pf of campaign.platform" [className]="pf">
+            <li *ngFor="let pf of campaign.platform.split(',')" [className]="pf">
               {{ campService.getSocialLabel(pf) }}
             </li>
           </ul>
           <ul class="categories mt-4">
-            <li *ngFor="let cat of campaign.category">
+            <li *ngFor="let cat of campaign.category.split(',')">
               {{ campService.getCatLabel(cat) }}
             </li>
           </ul>
@@ -491,7 +491,7 @@
             <div class="info-row">
               <label>Placement</label>
               <ul *ngIf="campaign.placement" class="placement">
-                <li *ngFor="let pl of campaign.placement">
+                <li *ngFor="let pl of campaign.placement.split(',')">
                   {{ campService.getPlaceLabel(pl) }}
                 </li>
               </ul>
@@ -504,17 +504,17 @@
               <label>Criteria</label>
               <div>
                 <p>Age : {{ campaign.ages[0] }}-{{ campaign.ages[1] }}</p>
-                <p>
+                <!--<p>
                   Minimum follower :
                   {{ translateFollowerLabel(campaign.followers[0]) }}-{{
                     translateFollowerLabel(campaign.followers[1])
                   }}
-                </p>
+                </p>-->
                 <!--                                <p>Language : <ng-container *ngFor="let ln of campaign.langs; last as isLast" >{{ campService.getLangLabel(ln) }}<ng-container *ngIf="!isLast">,</ng-container></ng-container></p>-->
                 <p>
                   Location -
                   <ng-container
-                    *ngFor="let ln of campaign.locationtags; last as isLast"
+                    *ngFor="let ln of campaign.locationtags.split(','); last as isLast"
                     >{{ ln
                     }}<ng-container *ngIf="!isLast"
                       >,</ng-container
@@ -532,12 +532,12 @@
               <label>Tag</label>
               <div>
                 <ul *ngIf="campaign.tags">
-                  <li *ngFor="let tg of campaign.tags">@{{ tg }}</li>
+                  <li *ngFor="let tg of campaign.tags.split(',')">@{{ tg }}</li>
                 </ul>
               </div>
               <div>
                 <ul *ngIf="campaign.tags2">
-                  <li *ngFor="let tg of campaign.tags2">#{{ tg }}</li>
+                  <li *ngFor="let tg of campaign.tags2.split(',')">#{{ tg }}</li>
                 </ul>
               </div>
             </div>
@@ -545,7 +545,7 @@
               <label>Image for detail</label>
             </div>
             <div class="text-center gallery-wrapper">
-              <ng-container *ngFor="let imgsrc of campaign.gallery">
+              <ng-container *ngFor="let imgsrc of campaign.gallery.split(',')">
                 <div class="gallery-item" *ngIf="imgsrc">
                   <img [src]="imgsrc" alt="" />
                 </div>

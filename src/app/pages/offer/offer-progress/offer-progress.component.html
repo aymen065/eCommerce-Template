@@ -93,8 +93,8 @@
                                         <p>{{ offer.caption }}</p>
                                     </div> -->
                                     <ul class="tags">
-                                        <li *ngFor="let tg of offer.tags" >@{{ tg }}</li>
-                                        <li *ngFor="let tg2 of offer.tags2" >#{{ tg2 }}</li>
+                                        <li *ngFor="let tg of offer.tags.split(',')" >@{{ tg }}</li>
+                                        <li *ngFor="let tg2 of offer.tags2.split(',')" >#{{ tg2 }}</li>
                                     </ul>
                                 </div>
                                 <ng-container *ngIf="!changeReq">
@@ -257,9 +257,9 @@
                                     </div>
                                     <div class="form-field">
                                         <p>Details review</p>
-                                        <ul class="rating-details">
+                                        <!--<ul class="rating-details">
                                             <li><span class="rating-label">Quality</span>
-                                                <mat-radio-group [(ngModel)]="offer.adv_review.rating_values[0]" formControlName="qt_rating" (change)="calcRating()">
+                                                <mat-radio-group [(ngModel)]="offer.adv_review.rating_values.split(',')[0]" formControlName="qt_rating" (change)="calcRating()">
                                                     <mat-radio-button *ngFor="let num of numbers" [value]="num"
                                                                       [checked]="offer.adv_review.rating_values[0] === num">{{ num}}</mat-radio-button>
                                                 </mat-radio-group>
@@ -282,7 +282,7 @@
                                                                       [checked]="offer.adv_review.rating_values[3] === num">{{ num}}</mat-radio-button>
                                                 </mat-radio-group>
                                             </li>
-                                        </ul>
+                                        </ul>-->
                                     </div>
                                     <div class="form-field">
                                         <p>Share your experience with this influencer to the Infinovae community</p>
@@ -295,16 +295,17 @@
                                     </div>
                                 </form>
                             </ng-container>
-                            <ng-container *ngIf="!isAdvertiser">
+                           <!-- <ng-container *ngIf="!isAdvertiser">
                                 <p>Check out advertiser’s review.</p>
                                 <div class="adv-review mt-10">
                                     <div class="review-top">
                                         <div class="avatar"></div>
                                         <div fxLayout="column" fxLayoutAlign="start start">
                                             <div class="review-title">{{ offer.adv_review.review_title }}</div>
-                                            <span class="review-platform" [ngClass]="offer.adv_review.platform">{{ offer.adv_review.platform }}</span>
+                                            <span class="review-platform" [ngClass]="offer.adv_review.platform.split(',')">{{ offer.adv_review.platform.split(',') }}</span>
+                                           
                                         </div>
-                                        <span class="review-date">{{ translateDate(offer.adv_review.review_date) }}</span>
+                                        <span class="review-date">{{ offer.adv_review.review_date}}</span>
                                     </div>
                                     <div class="review-content">
                                         <h5>Advertiser’s feedback</h5>
@@ -321,7 +322,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                            </ng-container>
+                            </ng-container>-->
                         </div>
                     </mat-step>
                 </mat-horizontal-stepper>
@@ -342,18 +343,19 @@
                         </div>
                         <div class="info-row">
                             <label>Platform</label>
-                            <ul *ngIf="offer.platform.length" class="socials mt-4">
-                                <li *ngFor="let pf of offer.platform" [className]="pf">{{ campService.getSocialLabel(pf) }}</li>
+                            <ul *ngIf="offer.platform.split(',').length" class="socials mt-4">
+                                <li *ngFor="let pf of offer.platform.split(',')" [className]="pf">{{ campService.getSocialLabel(pf) }}</li>
                             </ul>
                         </div>
                         <div class="info-row">
                             <label>Placement</label>
-                            <ul *ngIf="offer.placement.length" class="placement">
-                                <li *ngFor="let pl of offer.placement">{{ campService.getPlaceLabel(pl) }}</li>
+                            <ul *ngIf="offer.placement.split(',').length" class="placement">
+                                <li *ngFor="let pl of offer.placement.split(',')">{{ campService.getPlaceLabel(pl) }}</li>
                             </ul>
                         </div>
                         <div class="info-row">
                             <label>Content Creation</label>
+                            <pre>{{ offer.ship_date }}</pre>
                             <p></p>
                         </div>
                         <div class="info-row">

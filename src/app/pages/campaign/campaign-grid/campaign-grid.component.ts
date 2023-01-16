@@ -117,26 +117,26 @@ export class CampaignGridComponent implements OnInit, AfterViewChecked {
         let camp : Campaign = {
           id: 2,
           name: 'Nike Running Shoes',
-          category: ['fashion', 'travel', 'sports'],
+          category: this.tabtoString(['fashion', 'travel', 'sports']),
           budget: 100,
           coverImg: 'assets/img/demo/product07-01.jpg',
-          platform: ['instagram', 'facebook'],
-          placement: ['feed', 'story'],
+          platform: this.tabtoString(['instagram', 'facebook']),
+          placement: this.tabtoString(['feed', 'story']),
           requirement: 'test',
           caption: 'adf',
-          tags: ['nike'],
-          tags2: ['fashion'],
-          ages: [30, 60],
-          followers: [2000, 4500],
+          tags: this.tabtoString(['nike']),
+          tags2: this.tabtoString(['fashion']),
+          ages: this.tabtoString(['30', '60']),
+          followers: this.tabtoString(['2000', '4500']),
           periodStart: '09/02/2020',
           periodEnd: '09/09/2020',
-          gallery: ['assets/img/demo/product07-02.jpg', 'assets/img/demo/product07-03.jpg', 'assets/img/demo/product07-04.jpg', '', ''],
+          gallery: this.tabtoString(['assets/img/demo/product07-02.jpg', 'assets/img/demo/product07-03.jpg', 'assets/img/demo/product07-04.jpg', '', '']),
           gender: 'male',
           city: '',
           country: '',
-          quests: [1],
-          contents: [2],
-          langs: ['en'],
+          quests: this.tabtoString(['1']),
+          contents: this.tabtoString(['2']),
+          langs: this.tabtoString(['en']),
           billingName: '',
           billingAddress1: '',
           billingAddress2: '',
@@ -218,6 +218,13 @@ export class CampaignGridComponent implements OnInit, AfterViewChecked {
       this.curfilter = filter;
       const r = this.router.navigate(['panel/campaign/list'],
         { queryParams: { filter: this.activeTab , show: filter.value } } );
+    }
+    tabtoString(tab :string[]){
+      var str = '';
+      tab.forEach(e => {
+          str+=e+',';
+      });
+      return str;
     }
 
 }

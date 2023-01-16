@@ -168,7 +168,7 @@ export const pdfsData: DisclosurePDF[] = [
 ];
 export const reviewsData: Review[] = [
     {
-        review_id: 3,
+        id: 3,
         profile_id: 1,
         reviewer: 'Mocha',
         review_date: '09/10/2020',
@@ -176,10 +176,10 @@ export const reviewsData: Review[] = [
         summary: 'She is very kind and takes beautiful pictures. I want to work with her again! She is very kind and takes beautiful pictures. I want to work with her again!',
         rating: 4.8,
         platform: 'instagram',
-        rating_values: [5, 4.4, 5, 5],
+        rating_values: "5, 4.4, 5, 5",
     },
     {
-        review_id: 4,
+        id: 4,
         profile_id: 1,
         reviewer: 'Mocha',
         review_date: '09/20/2020',
@@ -187,10 +187,10 @@ export const reviewsData: Review[] = [
         summary: 'She is very kind and takes beautiful pictures. I want to work with her again! She is very kind and takes beautiful pictures. I want to work with her again!',
         rating: 4,
         platform: 'facebook',
-        rating_values: [5, 5, 3, 3],
+        rating_values: "5,5,3,3",
     },
     {
-        review_id: 1,
+        id: 1,
         profile_id: 7,
         reviewer: 'Carla Houston',
         review_date: '09/02/2020',
@@ -198,10 +198,10 @@ export const reviewsData: Review[] = [
         summary: 'She is very kind and takes beautiful pictures. I want to work with her again! She is very kind and takes beautiful pictures. I want to work with her again!',
         rating: 4.7,
         platform: 'facebook',
-        rating_values: [5, 4, 4.8, 5],
+        rating_values: "5,4,4.8,5",
     },
     {
-        review_id: 2,
+        id: 2,
         profile_id: 7,
         reviewer: 'Carla Houston',
         review_date: '08/02/2020',
@@ -209,11 +209,11 @@ export const reviewsData: Review[] = [
         summary: 'She is very kind and takes beautiful pictures. I want to work with her again! She is very kind and takes beautiful pictures. I want to work with her again!',
         rating: 5,
         platform: 'instagram',
-        rating_values: [5, 5, 5, 5],
+        rating_values: "5,5,5,5",
     },
     
     {
-        review_id: 5,
+        id: 5,
         profile_id: 3,
         reviewer: 'Mocha',
         review_date: '09/20/2020',
@@ -221,10 +221,10 @@ export const reviewsData: Review[] = [
         summary: 'She is very kind and takes beautiful pictures. I want to work with her again! She is very kind and takes beautiful pictures. I want to work with her again!',
         rating: 4.8,
         platform: 'facebook',
-        rating_values: [5, 5, 4.4, 5],
+        rating_values: "5,5,4.4,5",
     },
     {
-        review_id: 6,
+        id: 6,
         profile_id: 4,
         reviewer: 'Mocha',
         review_date: '09/20/2020',
@@ -232,10 +232,10 @@ export const reviewsData: Review[] = [
         summary: 'She is very kind and takes beautiful pictures. I want to work with her again! She is very kind and takes beautiful pictures. I want to work with her again!',
         rating: 5,
         platform: 'facebook',
-        rating_values: [5, 5, 5, 5],
+        rating_values: "5,5,5,5",
     },
     {
-        review_id: 7,
+        id: 7,
         profile_id: 2,
         reviewer: 'Mocha',
         review_date: '09/20/2020',
@@ -243,7 +243,7 @@ export const reviewsData: Review[] = [
         summary: 'She is very kind and takes beautiful pictures. I want to work with her again! She is very kind and takes beautiful pictures. I want to work with her again!',
         rating: 4.8,
         platform: 'facebook',
-        rating_values: [5, 5, 4.4, 5],
+        rating_values: '5,5,4.4,5',
     },
 ];
 

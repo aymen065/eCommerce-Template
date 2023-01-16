@@ -8,9 +8,10 @@
     <ng-container *ngIf="userService.currentUser.type === 'advertiser'">
         <div class="company-view-wrapper mt-10">
             <div class="company-info">
+                
                 <div class="brand-logo">
                     <img [src]="userService.currentUser.avatar" alt="">
-                    <h4>{{ userService.currentUser.company }}</h4>
+                    <h4>{{ userService.currentUser.companyName }}</h4>
                 </div>
                 <div class="details">
                     <div class="items-center justify-between" fxLayout="row">
@@ -41,9 +42,7 @@
                      gdColumns.xs="1fr"
                      gdGap="24px">
 
-                    <vex-campaign-card  (openCampaign)="openCampaign($event)"
-                                        *ngFor="let campaign of campaigns"
-                                        @fadeInUp [campaign]="campaign"></vex-campaign-card>
+                    
 
                 </div>
             </div>
@@ -80,7 +79,7 @@
                         <div><span class="value">${{ profile.price }}</span>Per post</div>
                     </div>
                     <p class="my-2 sayings">{{ profile.sayings }}<a [href]="profile.video" *ngIf="profile.video" class="profile-video">{{ profile.video }}</a></p>
-                    <ng-container *ngIf="userService.currentUser.userId === profile.id">
+                    <ng-container *ngIf="userService.currentUser.id === profile.id">
                         <ul *ngIf="userService.currentUser.category" class="categories mt-5">
                             <ng-container *ngFor="let cat of userService.currentUser.category; index as id">
                                 <li *ngIf="id < 3">{{ getCatLabel(cat) }}</li>
@@ -88,7 +87,7 @@
                             <li *ngIf="profile.categories.length > 3" class="more-label">+{{ profile.categories.length - 3}}</li>
                         </ul>
                     </ng-container>
-                    <ng-container *ngIf="userService.currentUser.userId !== profile.id">
+                    <ng-container *ngIf="userService.currentUser.id !== profile.id">
                     <ul *ngIf="profile.categories" class="categories mt-5">
                         <ng-container *ngFor="let cat of profile.categories; index as id">
                             <li *ngIf="id < 3">{{ campService.getCatLabel(cat) }}</li>

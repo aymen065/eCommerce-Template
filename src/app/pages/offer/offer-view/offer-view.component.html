@@ -34,13 +34,15 @@
         </div>
         <div class="info-row">
             <label>Criteria</label>
-            <div>
+            <!--
+                <div>
                 <p>Age : {{ campaign.ages[0] }}-{{ campaign.ages[1] }}</p>
                 <p>Minimum follower : {{ translateFollowerLabel(campaign.followers[0]) }}-{{ translateFollowerLabel(campaign.followers[1]) }}</p>
-                <p>Language : <ng-container *ngFor="let ln of campaign.langs; last as isLast" >{{ campService.getLangLabel(ln) }}<ng-container *ngIf="!isLast">,</ng-container></ng-container></p>
-                <p>Location - Country : {{ campService.getCountryLabel(campaign.country) }} / City : {{ campService.getCityLabel(campaign.city) }}</p>
-                <p>Caption : {{ campaign.caption }}</p>
-            </div>
+               <p>Language : <ng-container *ngFor="let ln of campaign.langs; last as isLast" >{{ campService.getLangLabel(ln) }}<ng-container *ngIf="!isLast">,</ng-container></ng-container></p>
+               <p>Location - Country : {{ campService.getCountryLabel(campaign.country) }} / City : {{ campService.getCityLabel(campaign.city) }}</p>
+               <p>Caption : {{ campaign.caption }}</p>
+           </div>
+            -->
         </div>
         <div class="info-row">
             <label>Requirement</label>

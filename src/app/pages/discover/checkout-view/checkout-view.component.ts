@@ -101,9 +101,9 @@ export class CheckoutViewComponent implements OnInit {
       (c) => c.profile_id === this.profile.id
     );
   }
-  openReviewDetail(id?: Review['review_id']) {
+  openReviewDetail(id?: Review['id']) {
     const index = this.campService.reviews.findIndex(
-      (elem) => elem.review_id === id
+      (elem) => elem.id === id
     );
 
     const dialogRef = this.dialog.open(ReviewDialogComponent, {

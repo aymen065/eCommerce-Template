@@ -36,9 +36,9 @@ export class CampaignEditComponent implements OnInit {
   campaign: Campaign;
   editFormGroup: FormGroup;
   ePeriod = false;
-  lttags: string[] = [];
-  tags: string[] = [];
-  tags2: string[] = [];
+  lttags: string;
+  tags: string;
+  tags2: string;
   removable = true;
   addOnBlur = true;
   selectable = true;
@@ -180,7 +180,9 @@ export class CampaignEditComponent implements OnInit {
     cf.classList.remove('opened');
   }
   deleteGalleryItem(id) {
-    this.campaign.gallery[id] = '';
+    var tab = this.campaign.gallery.split('');
+    tab[id] = '';
+    this.campaign.gallery = this.tabtoString(tab);
   }
   uploadGalleryItem(id, event) {
     const reader = new FileReader();
@@ -190,7 +192,10 @@ export class CampaignEditComponent implements OnInit {
       reader.readAsDataURL(file);
 
       reader.onload = () => {
-        this.campaign.gallery[id] = reader.result as string;
+        var tab = this.campaign.gallery.split('');
+        tab[id] = reader.result as string;
+        this.campaign.gallery = this.tabtoString(tab);
+
       };
     }
   }
@@ -235,11 +240,11 @@ export class CampaignEditComponent implements OnInit {
 
     if ((value || '').trim()) {
       if ( type === 2) {
-        this.tags2.push(value.trim());
+        this.tags2.split(',').push(value.trim());
       }else if (type === 1){
-        this.tags.push(value.trim());
+        this.tags.split(',').push(value.trim());
       }else{
-        this.lttags.push(value.trim());
+        this.lttags.split(',').push(value.trim());
       }
     }
 
@@ -252,17 +257,17 @@ export class CampaignEditComponent implements OnInit {
     if (type === 2) {
       const index = this.tags2.indexOf(obj);
       if (index >= 0) {
-        this.tags2.splice(index, 1);
+        this.tags2.split(',').splice(index, 1);
       }
     }else if (type === 1){
       const index = this.tags.indexOf(obj);
       if (index >= 0) {
-        this.tags.splice(index, 1);
+        this.tags.split(',').splice(index, 1);
       }
     }else{
       const index = this.lttags.indexOf(obj);
       if (index >= 0) {
-        this.lttags.splice(index, 1);
+        this.lttags.split(',').splice(index, 1);
       }
     }
   }
@@ -273,4 +278,11 @@ export class CampaignEditComponent implements OnInit {
   addQuest_product(quest) {
     
   }
+  tabtoString(tab :string[]){
+    var str = '';
+    tab.forEach(e => {
+      str+=e+',';
+    });
+    return str;
+}
 }

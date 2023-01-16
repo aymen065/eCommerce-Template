@@ -12,6 +12,7 @@ import { first } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import {SlimLoadingBarService} from 'ng2-slim-loading-bar';
 import { AuthenticationService } from 'src/app/providers/authentication.service';
+import { Influencer } from '../models/influencer';
 
 @Component({
   selector: 'vex-influencersignup',
@@ -24,7 +25,7 @@ import { AuthenticationService } from 'src/app/providers/authentication.service'
 })
 export class InfluencerSignUpComponent implements OnInit {
   form: FormGroup;
-
+  influencer: Influencer;
   inputType = 'password';
   visible = false;
 
@@ -63,40 +64,71 @@ export class InfluencerSignUpComponent implements OnInit {
     if(this.validateEmail(this.form.get('email').value)){
       if(this.form.get('email').value !== '' && this.form.get('password').value !== '' && this.form.get('first_name').value !== '' && this.form.get('last_name').value !== '')
       {
-        this.progressbar_visible = true;
-        this._loadingBar.start();
-
-        const data = { 
-          first_name: this.form.get('first_name').value,
-          last_name: this.form.get('last_name').value,
-          user : {
-            email: this.form.get('email').value,
-            password: this.form.get('password').value
-          }          
+        
+        this.influencer = { 
+          "id":0,
+          "firstName": this.form.get('first_name').value,
+          "lastName": this.form.get('last_name').value,
+          "email": this.form.get('email').value,
+          "password": this.form.get('password').value,
+          "userId": 0,
+          "type": null,
+          "avatar": '../../../../assets/img/demo/profile.jpg', 
+          "phone":null,
+          "fullName":null,
+          "birthDay":null,
+          "gender":null,
+          "address1":null,
+          "address2":null,
+          "city":null,
+          "state":null,
+          "zipCode":null,
+          "cCards":null,
+          "bankAccount":null,
+          "category":null,
+          "bio":null ,
+          "brandsite":null, 
+          "profileId":0
+                   
         }
-        this.dataService.createInfluencerAccount(data)
+        this.dataService.createInfluencerAccount(this.influencer)
         .pipe(first())
-        .subscribe((content:any) => {
+        .subscribe((data) => {
 
 
-          this.authService.login(this.form.get('email').value, this.form.get('password').value)
+          /*this.authService.login(this.form.get('email').value, this.form.get('password').value)
           .pipe()
-          .subscribe(cdata => {
+          .subscribe(cdata => {*/
 
-            this.userService.afterLogin('influencer');
-            this.userService.currentUser.fullName = this.form.get('first_name').value + ' ' + this.form.get('last_name').value;
-            this.userService.currentUser.email = this.form.get('email').value;
+          if(data == null){  
+            this._loadingBar.complete();
+            this.toastr.error('The email that you entered has been claimed by other users. Please use a different email or contact us ','', {
+              timeOut: 3000,
+              positionClass: 'toast-bottom-right',
+              progressBar: true
+            });
+          }
+            else
+            {
+              
+              this.userService.afterLogin('influencer',this.form.get('email').value);
+            //this.userService.currentUser.fullName = this.form.get('first_name').value + ' ' + this.form.get('last_name').value;
+            //this.userService.currentUser.email = this.form.get('email').value;
 
-            this.userService.currentUser.profileId = content.profile_uuid;
+            //this.userService.currentUser.profileId = content.profile_uuid;
 
-
-            localStorage.setItem('type', 'influencer');
+            this.progressbar_visible = true;
+            this._loadingBar.start();
+             localStorage.setItem('type', 'influencer');
+                this._loadingBar.complete();
             this._loadingBar.complete();
             this.router.navigate(['/panel/user/setting']);
-          })
+            }
+            
+          //})
           
           
-        },
+        }/*,
         error => {
           // console.log(error);
           this._loadingBar.complete();
@@ -105,7 +137,7 @@ export class InfluencerSignUpComponent implements OnInit {
             positionClass: 'toast-bottom-right',
             progressBar: true
           });
-        });
+        }*/);
       }
       else
         this.snackbar.open('Please fill out all fields', 'Got It!', {
@@ -127,7 +159,7 @@ export class InfluencerSignUpComponent implements OnInit {
     return false;
   }
   switchViewer(type) {
-    this.userService.afterLogin(type);
+    this.userService.afterLogin(type,'');
     if(type !== '' && type !== 'brandsignup')
       this.router.navigate([type,'influencer']);
     else

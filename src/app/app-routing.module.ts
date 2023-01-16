@@ -1,12 +1,35 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CustomLayoutComponent } from './custom-layout/custom-layout.component';
+import { ClientComponent } from './pages/client/client.component';
+import { StoreComponent } from './pages/store/store.component';
 
 const routes: Routes = [
   {
-    path: '',
+    
+    path: 'login',
     loadChildren: () => import('./pages/login/login.module').then(m => m.LoginModule),
+   
   },
+  {
+    
+    path: '',
+    component: StoreComponent,
+    /*loadChildren: () => import('./pages/store/store.module').then(m=>m.StoreModule),
+    data: {
+      pageTitle: 'client',
+    }*/
+  },
+  {
+    path: 'admin',
+    component: ClientComponent,
+    
+    /* loadChildren: () => import('./pages/client/client.module').then(m=>m.ClientModule),
+    data: {
+      pageTitle: 'client',
+    } */
+  },
+  
   {
     path: 'signin/:id',
     

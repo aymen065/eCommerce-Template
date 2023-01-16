@@ -35,12 +35,12 @@
                     <li *ngFor="let pf of filteropt.platform"><span [ngClass]="pf"></span></li>
                 </ul>
                 <div *ngIf="filteropt.country"><span class="value">{{ filteropt.country }}</span><p>Country</p></div>
-<!--                <div *ngIf="filteropt.city"><span class="value">{{ filteropt.city }}</span><p>City</p></div>-->
+            <!--                <div *ngIf="filteropt.city"><span class="value">{{ filteropt.city }}</span><p>City</p></div>-->
                 <div *ngIf="filteropt.gender"><span class="value">{{ filteropt.gender }}</span><p>Gender</p></div>
                 <div *ngIf="filteropt.age[0] > 0 || filteropt.age[1] < 99"><span class="value">{{ filteropt.age[0] }}-{{ filteropt.age[1] }}</span><p>Age</p></div>
-<!--                <div *ngIf="filteropt.distance[0] > 1000 || filteropt.distance[1] < 10000"><span class="value">{{ filteropt.distance[0] }}-{{ filteropt.distance[1] }}</span><p>Distance</p></div>-->
+        <!--                <div *ngIf="filteropt.distance[0] > 1000 || filteropt.distance[1] < 10000"><span class="value">{{ filteropt.distance[0] }}-{{ filteropt.distance[1] }}</span><p>Distance</p></div>-->
                 <div *ngIf="filteropt.follower[0] > 1000 || filteropt.follower[1] < 10000"><span class="value">{{ translateFollowerLabel(filteropt.follower[0]) }}-{{ translateFollowerLabel(filteropt.follower[1]) }}</span><p>Follower</p></div>
-<!--                <div *ngIf="filteropt.price[0] > 0 || filteropt.price[1] < 100"><span class="value">{{ filteropt.price[0] }}-{{ filteropt.price[1] }}</span><p>Price</p></div>-->
+        <!--                <div *ngIf="filteropt.price[0] > 0 || filteropt.price[1] < 100"><span class="value">{{ filteropt.price[0] }}-{{ filteropt.price[1] }}</span><p>Price</p></div>-->
                 <ul class="category" *ngIf="filteropt.category">
                     <ng-container *ngFor="let ct of filteropt.category index as id">
                         <li *ngIf="id < 2"><span>{{ ct }}</span></li>

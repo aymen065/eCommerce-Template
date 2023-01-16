@@ -2,9 +2,8 @@
     <div class="mid-content">
         <div class="dashboard-welcome">
             <img src="../../../../assets/img/welcome.png" alt="">
-            <h2>Hi Hyebin, <strong>Welcome back!</strong></h2>
-            <p>You are  currently on the <strong>Free plan</strong> -Upgrade your plan and get more benefit. </p>
-            <button mat-raised-button class="upgrade"><span>Upgrade to Premium</span></button>
+            <h2>Hi <strong>{{this.userService.currentUser.fullName}}</strong>, Welcome back!</h2>
+            <p>how's your day ? </p>
         </div>
         <div class="section">
             <h3>Overview</h3>

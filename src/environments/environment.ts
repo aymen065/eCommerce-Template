@@ -4,11 +4,11 @@
 
 export const environment = {
   production: false,
-  // REST_API_SERVER: 'http://127.0.0.1:8000',
-  REST_API_SERVER: 'https://backend.infinovae.com',
+   REST_API_SERVER: 'http://internal-LBA-1495990277.us-east-1.elb.amazonaws.com:2000',
+  //REST_API_SERVER: 'https://backend.infinovae.com',
   //For social media API
-  apiUrl: 'http://localhost:4000',
-  facebookAppId: '314930319788683'
+  apiUrl: 'http://internal-LBA-1495990277.us-east-1.elb.amazonaws.com:2000',
+  //facebookAppId: '314930319788683'
 };
 
 /*

@@ -15,16 +15,19 @@
             </div>
         </div>
     </div>
-    <ng-container *ngIf="(filteredOffers$ | async).length > 0; else emptyTableImg">
+   <!-- this.campService.offers
+    (filteredOffers$ | async)-->
+    <ng-container *ngIf="this.campService.offers.length > 0; else emptyTableImg">
+        
         <div class="mylist-wrapper">
-            <h4 class="my-6">My offer [<span class="counts">{{ myOfferSource.data.length }}</span>]</h4>
+            <h4 class="my-6">My offer [<span class="counts">{{ this.campService.offers.length }}</span>]</h4>
             <vex-scrollbar class="h-full relative">
                 <div fxLayout="column" fxLayoutAlign="space-between">
-                    <table mat-table [dataSource]="myOfferSource" class="myoffercamp-table">
+                    <table mat-table [dataSource]="this.campService.offers" class="myoffercamp-table">
                         <ng-container matColumnDef="campaign">
                             <th mat-header-cell *matHeaderCellDef class="campaign-header">Campaign</th>
                             <td mat-cell *matCellDef="let element" class="campaign">
-                                <div class="img-wrapper"><img [src]="element.coverImg" alt=""></div>
+                                <div class="img-wrapper"><img [src]="element.post_img" alt=""></div>
                                 <span>{{ element.camp_name }}</span>
                             </td>
                         </ng-container>
@@ -50,12 +53,12 @@
                         <tr mat-header-row *matHeaderRowDef="clistVColumns"></tr>
                         <tr mat-row *matRowDef="let row; columns: clistVColumns;"></tr>
                     </table>
-                    <div class="totals">Total: <span class="selected-counts">{{ myOfferSource.data.length }}</span>
+                    <div class="totals">Total: <span class="selected-counts">{{ this.campService.offers.length }}</span>
                     </div>
-                    <mat-paginator #myCampPaginator [fxHide]="myOfferSource.data.length === 0" [pageSize]="5"
+                    <mat-paginator #myCampPaginator [fxHide]="this.campService.offers.length == 0" [pageSize]="5"
                         [pageSizeOptions]="[5,10,20]" class="sticky bottom-0 left-0 right-0 border-t" fxFlex="none">
                     </mat-paginator>
-                    <div *ngIf="myOfferSource.data.length === 0">
+                    <div *ngIf="this.campService.offers.length == 0">
                         <h5 class="empty-msg mt-5 text-center">No campaigns in your list.</h5>
                     </div>
                 </div>
@@ -66,6 +69,7 @@
         <!-- todo: distinguish which we're in -->
         <span class="emptyListSpan" *ngIf="activeTab === 'current'">
             <img class="emptyListImg" src="../../../../assets/img/noCurrentOffer.png">
+            
             You do not have any current offers at the moment...
         </span>
 

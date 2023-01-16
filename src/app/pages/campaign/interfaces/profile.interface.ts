@@ -1,5 +1,5 @@
 export interface Profile {
-    id: any;
+    id: number;
     profile_bg: string;
     photo_img: string;
     name: string;
@@ -21,7 +21,7 @@ export interface Profile {
     rating?: number;
 }
 export interface Review {
-    review_id: number;
+    id: number;
     profile_id: number;
     reviewer: string;
     review_title: string;
@@ -29,7 +29,7 @@ export interface Review {
     review_date: string;
     summary: string;
     platform: string;
-    rating_values: number[];
+    rating_values: string;
 }
 export interface AnalyzeData {
     value: number;

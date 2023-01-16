@@ -38,6 +38,7 @@ export class LoginComponent implements OnInit {
       password: ['', Validators.required],
       name: ['', Validators.required]
     });
+    
   }
 
   send() { // need to implement login functionality here
@@ -62,9 +63,11 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  switchViewer(type) {
-    this.userService.afterLogin(type);
-    // console.log('switch');
+  switchViewer(type:string) {
+
+   
+   
+    this.userService.afterLogin(type,'');
     if(type == 'brand')
       this.router.navigate(['/signin', 'brand']);
     else if(type == 'influencer')

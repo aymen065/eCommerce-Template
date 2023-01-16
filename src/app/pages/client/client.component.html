@@ -1,0 +1,342 @@
+
+<div class="admin-wrapper table-responsive" style="padding-top: 3%;align-content: center; ">
+	<div class="wrapper-filter" style="width: 95%;margin-left: 2%">
+		<div class="product-filter form-row">
+			
+			<div class="form-group col-2">
+				<select (change)="onChangeCategory('search'); onSearch()" [(ngModel)]="searchForm.categoryName"
+				        class="form-control">
+					<option *ngFor="let category of categories"
+					        [value]="category.name">{{category.name }}</option>
+				</select>
+			</div>
+			<div class="form-group col-2">
+				<select (change)="onChangeTypeSearch(); onSearch()" [(ngModel)]="searchForm.typeName" class="form-control">
+					<ng-container *ngFor="let type of types">
+						<option *ngIf="type.categoryName === searchForm.categoryName"
+						        [value]="type.name">{{ type.name }}</option>
+					</ng-container>
+				</select>
+			</div>
+			<div class="form-group col-2">
+				<button (click)="onSearch()" class="btn btn-dark" placement="bottom"
+				        >
+					<fa-icon [icon]="faSearch"></fa-icon>
+				</button>
+				<button (click)="openCreateModal(createTemplate)" class="btn btn-dark btn-create"
+				        >
+					<fa-icon [icon]="faPlusSquare"></fa-icon>
+				</button>
+				<button (click)="openImportExcelModal(importExcelTemplate)" class="btn btn-dark btn-create"
+				        placement="bottom" >
+					<fa-icon [icon]="faFileUpload"></fa-icon>
+				</button>
+				<button (click)="onExportExcel()" class="btn btn-dark btn-create" placement="bottom"
+				       >
+					<fa-icon [icon]="faFileDownload"></fa-icon>
+				</button>
+			</div>
+			<div class="form-group col-3">
+				<pagination (pageChanged)="onPageChanged($event)"
+				            [(ngModel)]="pagination.currentPage"
+				            [boundaryLinks]="true"
+				            [itemsPerPage]="pagination.itemPerPage"
+				            [maxSize]="pagination.maxSize"
+				            [pageBtnClass]="'pagination-style'"
+				            [totalItems]="pagination.totalItem"
+				            class="float-right" firstText="&laquo;" lastText="&raquo;" nextText="&rsaquo;"
+				            previousText="&lsaquo;">
+				</pagination>
+			</div>
+			<div class="form-group col-1">
+				<select (change)="paging(searchResults)" [(ngModel)]="pagination.itemPerPage"
+				        class="btn btn-outline-dark float-right" placement="bottom"
+				        >
+					<option *ngFor="let val of [5, 10, 20, 50, 100, 200, 500, 1000]; let i = index" [selected]="i === 0"
+					        [value]="val">{{val}}</option>
+				</select>
+			</div>
+		</div>
+	</div>
+	<table class="table table-bordered table-striped table-hover table-sm table-product" style="width: 95%;margin-left: 2%">
+		<thead class="{{bgPrimary}} {{tcPrimary}}">
+		<tr>
+			<th (click)="onSort(4)" class="col-index" scope="col">#
+				<fa-icon *ngIf="sortFlip[4]" [icon]="faSortAmountUp"></fa-icon>
+				<fa-icon *ngIf="!sortFlip[4]" [icon]="faSortAmountDownAlt"></fa-icon>
+			</th>
+			<th (click)="onSort(0)" class="col-name col-sortable" scope="col">Name
+				<fa-icon *ngIf="sortFlip[0]" [icon]="faSortAmountUp"></fa-icon>
+				<fa-icon *ngIf="!sortFlip[0]" [icon]="faSortAmountDownAlt"></fa-icon>
+			</th>
+			<th class="col-description" scope="col">Description</th>
+			<th (click)="onSort(1)" class="col-price col-sortable" scope="col">Price
+				<fa-icon *ngIf="sortFlip[1]" [icon]="faSortAmountUp"></fa-icon>
+				<fa-icon *ngIf="!sortFlip[1]" [icon]="faSortAmountDownAlt"></fa-icon>
+			</th>
+			<th class="col-image" scope="col">Image</th>
+			<th (click)="onSort(2)" class="col-quantity col-sortable" scope="col">Quantity
+				<fa-icon *ngIf="sortFlip[2]" [icon]="faSortAmountUp"></fa-icon>
+				<fa-icon *ngIf="!sortFlip[2]" [icon]="faSortAmountDownAlt"></fa-icon>
+			</th>
+			<th (click)="onSort(3)" class="col-sale-amount col-sortable" scope="col">Sale Amount
+				<fa-icon *ngIf="sortFlip[3]" [icon]="faSortAmountUp"></fa-icon>
+				<fa-icon *ngIf="!sortFlip[3]" [icon]="faSortAmountDownAlt"></fa-icon>
+			</th>
+			<th class="col-category" scope="col">Category</th>
+			<th class="col-type" scope="col">Type</th>
+			<th class="col-actions" scope="col">Action</th>
+		</tr>
+		</thead>
+		<tbody>
+		<ng-container *ngIf="displayProducts.length != 0">
+			<ng-container *ngFor="let product of displayProducts; trackBy: trackByFn; let i = index">
+				<tr (click)="selectRow(i)" [ngClass]="{'row-selected': isSelected[i]}">
+					<th scope="row">{{product.id}}</th>
+					<td>{{product.name}}</td>
+					<td>{{product.description}}</td>
+					<td>{{product.price.toLocaleString(translate.currentLang)}}</td>
+					<td>
+						<img (click)="onOpenImage(i)" [alt]="product.name" [src]="product.imgUrl" class="product-img">
+					</td>
+					<td>{{product.quantity}}</td>
+					<td>{{product.saleAmount}}</td>
+					<td>{{ product.categoryName }}</td>
+					<td>{{product.typeName }}</td>
+					<td>
+						<button (click)="openEditModal(editTemplate, product.id)" class="btn btn-info btn-edit"
+						        placement="bottom">
+							<fa-icon [icon]="faPen"></fa-icon>
+						</button>
+						<button (click)="openDeleteModal(deleteTemplate, product.id)" class="btn btn-warning btn-edit"
+						        placement="bottom" >
+							<fa-icon [icon]="faTrash"></fa-icon>
+						</button>
+					</td>
+				</tr>
+			</ng-container>
+		</ng-container>
+		<ng-container *ngIf="displayProducts.length === 0">
+			<tr>
+				<td colspan="10"><i>No Product Found</i></td>
+			</tr>
+		</ng-container>
+		</tbody>
+	</table>
+</div>
+
+<ng-template #createTemplate>
+	<div class="modal-header {{bgPrimary}} {{tcPrimary}}">
+		<h4 class="modal-title pull-left">Create Product</h4>
+		<button (click)="modalRef.hide()" class="close pull-right">
+			<span aria-hidden="true" class="{{tcPrimary}}">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<div class="form-group row">
+			<label class="col-sm-3 col-form-label" for="inputName"><b>Name</b></label>
+			<div class="col-sm-9">
+				<input [(ngModel)]="createForm.name" class="form-control" id="inputName" type="text">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-3 col-form-label" for="inputDescription"><b>Description</b></label>
+			<div class="col-sm-9">
+				<textarea [(ngModel)]="createForm.description" class="form-control" id="inputDescription"
+				          rows="3"></textarea>
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-3 col-form-label" for="inputPrice"><b>Price</b></label>
+			<div class="col-sm-9">
+				<input [(ngModel)]="createForm.price" class="form-control" id="inputPrice" type="text">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-3 col-form-label" for="inputImage"><b>Image</b></label>
+			<div class="col-sm-9">
+				<input [(ngModel)]="createForm.imgUrl" class="form-control" id="inputImage" type="text">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-3 col-form-label" for="inputQuantity"><b>Quantity</b></label>
+			<div class="col-sm-9">
+				<input [(ngModel)]="createForm.quantity" class="form-control" id="inputQuantity" type="number">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-3 col-form-label" for="inputSaleAmount"><b>Sale Amount</b></label>
+			<div class="col-sm-9">
+				<input [(ngModel)]="createForm.saleAmount" class="form-control" id="inputSaleAmount" type="number">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-3 col-form-label" for="inputCategory"><b>Category</b></label>
+			<div class="col-sm-9">
+				<select (change)="onChangeCategory('create')" [(ngModel)]="createForm.categoryName" class="form-control"
+				        id="inputCategory">
+					<option *ngFor="let category of categories"
+					        [value]="category.name">{{category.name }}</option>
+				</select>
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-3 col-form-label" for="inputType"><b>Type</b></label>
+			<div class="col-sm-9">
+				<select [(ngModel)]="createForm.typeName" class="form-control" id="inputType">
+					<ng-container *ngFor="let type of types">
+						<option *ngIf="type.categoryName === createForm.categoryName"
+						        [value]="type.name">{{ type.name }}</option>
+					</ng-container>
+				</select>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer bg-light">
+		<button (click)="onCreate()" class="btn btn-success pull-right">Save</button>
+		<button (click)="onRefreshCreateForm()" class="btn btn-dark pull-right">Refresh</button>
+	</div>
+</ng-template>
+
+<ng-template #editTemplate>
+	<div class="modal-header {{bgPrimary}} {{tcPrimary}}">
+		<h4 class="modal-title pull-left">Edit Product</h4>
+		<button (click)="modalRef.hide(); onCloseEdit()" class="close pull-right">
+			<span aria-hidden="true" class="{{tcPrimary}}">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<div class="form-group row">
+			<label class="col-sm-3 col-form-label" for="inputNameE"><b>Name</b></label>
+			<div class="col-sm-9">
+				<input [(ngModel)]="editForm.name" class="form-control" id="inputNameE" type="text">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-3 col-form-label" for="inputDescriptionE"><b>Description</b></label>
+			<div class="col-sm-9">
+				<textarea [(ngModel)]="editForm.description" class="form-control" id="inputDescriptionE"
+				          rows="3"></textarea>
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-3 col-form-label" for="inputPriceE"><b>Price</b></label>
+			<div class="col-sm-9">
+				<input [(ngModel)]="editForm.price" class="form-control" id="inputPriceE" type="text">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-3 col-form-label" for="inputImageE"><b>Image</b></label>
+			<div class="col-sm-9">
+				<input [(ngModel)]="editForm.imgUrl" class="form-control" id="inputImageE" type="text">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-3 col-form-label" for="inputQuantityE"><b>Quantity</b></label>
+			<div class="col-sm-9">
+				<input [(ngModel)]="editForm.quantity" class="form-control" id="inputQuantityE" type="number">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-3 col-form-label" for="inputSaleAmountE"><b>Sale Amount</b></label>
+			<div class="col-sm-9">
+				<input [(ngModel)]="editForm.saleAmount" class="form-control" id="inputSaleAmountE" type="number">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-3 col-form-label" for="inputCategoryE"><b>Category</b></label>
+			<div class="col-sm-9">
+				<select (change)="onChangeCategory('edit')" [(ngModel)]="editForm.categoryName" class="form-control"
+				        id="inputCategoryE">
+					<option *ngFor="let category of categories"
+					        [value]="category.name">{{category.name }}</option>
+				</select>
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-3 col-form-label" for="inputTypeE"><b>Type</b></label>
+			<div class="col-sm-9">
+				<select [(ngModel)]="editForm.typeName" class="form-control" id="inputTypeE">
+					<ng-container *ngFor="let type of types">
+						<option *ngIf="type.categoryName === editForm.categoryName"
+						        [value]="type.name">{{type.name }}</option>
+					</ng-container>
+				</select>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer bg-light">
+		<button (click)="onEdit()" class="btn btn-success pull-right">Save</button>
+		<button (click)="onRefreshEditForm()" class="btn btn-dark pull-right">Refresh</button>
+	</div>
+</ng-template>
+
+<ng-template #deleteTemplate>
+	<div class="modal-header {{bgPrimary}} {{tcPrimary}}">
+		<h4 class="modal-title pull-left">Delete?</h4>
+		<button (click)="modalRef.hide()" class="close pull-right">
+			<span aria-hidden="true" class="{{tcPrimary}}">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body table-responsive wrapper-delete-table">
+		<table class="table table-bordered table-striped table-sm">
+			<thead class="{{bgPrimary}} {{tcPrimary}}">
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col">Name</th>
+				<th scope="col">Price</th>
+				<th scope="col">Quantity</th>
+				<th scope="col">Sale Amount</th>
+				<th scope="col">category</th>
+				<th scope="col">Type</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr *ngFor="let indexFlag of isSelected; let i = index">
+				<ng-container *ngIf="indexFlag">
+					<th scope="row">{{displayProducts[i].id}}</th>
+					<td>{{displayProducts[i].name}}</td>
+					<td>{{displayProducts[i].price.toLocaleString(translate.currentLang)}}</td>
+					<td>{{displayProducts[i].quantity}}</td>
+					<td>{{displayProducts[i].saleAmount}}</td>
+					<td>{{displayProducts[i].categoryName }}</td>
+					<td>{{ displayProducts[i].typeName }}</td>
+				</ng-container>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="modal-footer bg-light">
+		<button (click)="onDelete()" class="btn btn-danger pull-right" placement="bottom"
+		       >
+			<fa-icon [icon]="faTrash"></fa-icon>
+		</button>
+	</div>
+</ng-template>
+
+<ng-template #importExcelTemplate>
+	<div class="modal-header {{bgPrimary}} {{tcPrimary}}">
+		<h4 class="modal-title pull-left">Import Excel</h4>
+		<button (click)="modalRef.hide()" class="close pull-right">
+			<span aria-hidden="true" class="{{tcPrimary}}">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<div class="input-group mb-3">
+			<div class="input-group-prepend">
+				<span class="input-group-text" id="inputGroupFileAddon">Browse Excel</span>
+			</div>
+			<div class="custom-file">
+				<input (change)="onFileChange($event)" aria-describedby="inputGroupFileAddon" class="custom-file-input"
+				       id="inputGroupFile"
+				       type="file">
+				<label class="custom-file-label" for="inputGroupFile">Import Excel</label>
+			</div>
+		</div>
+		<span><i>Import Excel Note</i></span>
+	</div>
+	<div class="modal-footer bg-light">
+		<button (click)="onImportExcel(excelData)"
+		        class="btn btn-success pull-right">Import</button>
+	</div>
+</ng-template>

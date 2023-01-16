@@ -1,0 +1,116 @@
+.wrapper-store {
+	.wrapper-product {
+		.wrapper-filter {
+			.form-row {
+				.form-group {
+					margin-bottom: 0;
+					margin-top: 5px;
+					@media only screen and (min-width: 768px) {
+						.responsive-float {
+							float: right;
+						}
+					}
+					@media only screen and (max-width: 768px) {
+						.responsive-float {
+							float: left;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+.wrapper-main {
+	.wrapper-navbar {
+		nav {
+			padding: 0 1rem;
+
+			a {
+				.rainbow-text {
+					background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);
+					-webkit-background-clip: text;
+				}
+			}
+
+			.btn-lang {
+				margin-right: 15px;
+			}
+
+			@media only screen and (min-width: 576px) {
+				.responsive-float {
+					float: right;
+				}
+			}
+			@media only screen and (max-width: 576px) {
+				.responsive-float {
+					float: left;
+				}
+			}
+		}
+	}
+
+	.wrapper-router {
+		padding: 10px;
+	}
+
+	.fixed-bottom-2 {
+		position: fixed;
+		bottom: 0;
+		left: 40px;
+	}
+
+	.fixed-bottom-3 {
+		position: fixed;
+		bottom: 0;
+		left: 80px;
+	}
+
+	.fixed-bottom-4 {
+		position: fixed;
+		bottom: 0;
+		left: 120px;
+	}
+}
+
+.col-hoverable {
+	&:hover {
+		color: #212529;
+		background-color: rgba(0, 0, 0, .075);
+	}
+}
+
+.wrapper-cart-table {
+	max-height: 600px;
+	overflow: auto;
+}
+
+@media only screen and (min-width: 1920px) {
+	.wrapper-cart-table {
+		max-height: 800px;
+		overflow: auto;
+	}
+}
+
+.personal-info {
+
+}
+.secondary:hover {
+	background: rgb(205,34,156);
+	background: linear-gradient(90deg, rgba(205,34,156,1) 0%, rgba(243,106,78,1) 100%);
+  }
+  .primary:hover {
+	background: rgb(76,182,228);
+	background: linear-gradient(90deg, rgba(76,182,228,1) 0%, rgba(131,58,180,1) 100%);
+  }
+  .negotiate-details textarea {
+	width: 100%;
+	padding: 15px;
+  }
+  
+  .emptyListSpan {
+	text-align: center;
+  }
+  .emptyListImg {
+	margin: 100px auto 30px;// margins constraint size, if size any larger img is blurry so increase resolution or use SVG file
+  }

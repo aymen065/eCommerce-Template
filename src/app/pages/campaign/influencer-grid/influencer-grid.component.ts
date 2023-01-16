@@ -459,13 +459,13 @@ export class InfluencerGridComponent implements OnInit, AfterViewChecked {
         newId++;
         this.campService.proposals.push({
           id: newId,
-          userId: this.userService.currentUser.userId,
+          userId: this.userService.currentUser.id,
           campId: c.id,
           description: this.proposalTxt,
           status: 'pending',
         });
       });
-      this.router.navigate(['panel/chat/' + this.userService.currentUser.userId]);
+      this.router.navigate(['panel/chat/' + this.userService.currentUser.id]);
     }
   }
 }

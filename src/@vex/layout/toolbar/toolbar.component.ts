@@ -69,9 +69,9 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.interval = setInterval(() => {
-      this.getNotification();
+     // this.getNotification();
     }, 30000);
-    this.getNotification();
+   // this.getNotification();
 
     this.dataService.notifications$.subscribe((res: Notification[]) => {
       this.notifications = res;
@@ -82,9 +82,9 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     clearInterval(this.interval);
   }
 
-  getNotification() {
+ /* getNotification() {
     this.dataService.getNotification();
-  }
+  }*/
 
   openQuickpanel() {
     this.layoutService.openQuickpanel();

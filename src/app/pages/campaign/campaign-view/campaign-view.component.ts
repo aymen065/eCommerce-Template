@@ -76,7 +76,7 @@ export class CampaignViewComponent implements OnInit {
         }        
       }
     })
-    this.requirement_display = '○ ' + this.campaign.requirement + '\n' + '○ ' + this.contentdata[this.campaign.contents[0] - 1].question + '\n' + '○ ' + req;
+    this.requirement_display = '○ ' + this.campaign.requirement + '\n' + '○ ' + this.contentdata[Number(this.campaign.contents.split(',')[0]) - 1].question + '\n' + '○ ' + req;
   }
   backList(){
     if (this.userService.currentUser.type === 'influencer') {
@@ -99,7 +99,8 @@ export class CampaignViewComponent implements OnInit {
     const r = this.router.navigate(['/panel/campaign/edit/' + this.campaign.id] );
   }
   openAdvertiser(){
-    this.userService.afterLogin('advertiser');
+    this.userService.currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    this.userService.afterLogin('advertiser',this.userService.currentUser.email);
     const r = this.router.navigate(['/panel/user/view'] );
   }
   addList() {

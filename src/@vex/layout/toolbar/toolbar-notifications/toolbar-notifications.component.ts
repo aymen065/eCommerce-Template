@@ -28,7 +28,7 @@ export class ToolbarNotificationsComponent implements OnInit {
     this.dropdownOpen = true;
     this.cd.markForCheck();
     const notifs = this.notifications.filter(item => !item.read).map(item => item.notification_uuid);
-    this.dataService.setMarkAsRead(notifs);
+    //this.dataService.setMarkAsRead(notifs);
     const popoverRef = this.popover.open({
       content: ToolbarNotificationsDropdownComponent,
       origin: this.originRef,

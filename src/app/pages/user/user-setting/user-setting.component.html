@@ -15,7 +15,7 @@
                 </div>
             </div>
             <ng-container *ngIf="userService.currentUser.type === 'advertiser'">
-                <h4 class="mt-3">{{ userService.currentUser.company }}</h4>
+                <h4 class="mt-3">{{ userService.currentUser.companyName }}</h4>
             </ng-container>
             <ng-container *ngIf="userService.currentUser.type === 'influencer'">
                 <h4 class="mt-3">{{ userService.currentUser.fullName }}</h4>

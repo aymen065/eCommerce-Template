@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
               private navigationService: NavigationService,
               private splashScreenService: SplashScreenService) {
     Settings.defaultLocale = this.localeId;
-
+                
     if (this.platform.BLINK) {
       this.renderer.addClass(this.document.body, 'is-blink');
     }
@@ -162,9 +162,9 @@ export class AppComponent implements OnInit {
               }
             });
             body.classList.add('page--' + data.pageTitle.toLowerCase());
-            this.titleService.setTitle(data.pageTitle + ' | Infinovae');
+            this.titleService.setTitle(data.pageTitle + ' | e-commerce');
           }else{
-            this.titleService.setTitle('Infinovae');
+            this.titleService.setTitle('e-commerce');
           }
       }
     );

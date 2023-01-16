@@ -39,13 +39,13 @@
                             <div class="form-field">
                                 <div class="form-label">Brand’s name</div>
                                 <mat-form-field appearance="outline">
-                                    <input matInput formControlName="company">
+                                    <input matInput formControlName="company" >
                                 </mat-form-field>
                             </div>
                             <div class="form-field">
                                 <div class="form-label">Brand’s website</div>
                                 <mat-form-field appearance="outline">
-                                    <input matInput formControlName="brandsite">
+                                    <input matInput formControlName="brandsite" [value]="profile.brandsite">
                                 </mat-form-field>
                             </div>
                         </ng-container>
@@ -60,8 +60,8 @@
                             <div class="form-label">Phone number (This number is authorized)
                                 <button mat-raised-button class="change-enable" (click)="toggleDisable('phone')"><span>Change</span></button></div>
                             <mat-form-field appearance="outline">
-                                <mat-label>(000) 000-0000</mat-label>
-                                <input type="text" matInput mask="(000) 000-0000" formControlName="ctrlphone" [readonly]="disablePhone" [class.disabled] = "disablePhone"/>
+                                <mat-label>(000) 00 000 000</mat-label>
+                                <input type="text" matInput mask="(000) 00 000 000" formControlName="ctrlphone" [readonly]="disablePhone" [class.disabled] = "disablePhone"/>
                             </mat-form-field>
                         </div>
                         <hr>

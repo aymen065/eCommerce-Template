@@ -31,6 +31,8 @@
               "src/CHANGELOG.md"
             ],
             "styles": [
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
               "src/@vex/styles/tailwind.scss",
               "src/styles.scss",
               "node_modules/ngx-toastr/toastr.css"
@@ -129,6 +131,8 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
               "src/styles.scss"
             ],
             "scripts": []

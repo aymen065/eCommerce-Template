@@ -39,7 +39,7 @@
             <label>Criteria</label>
             <div>
                 <p>Age : {{ campaign.ages[0] }}-{{ campaign.ages[1] }}</p>
-                <p>Minimum follower : {{ translateFollowerLabel(campaign.followers[0]) }}-{{ translateFollowerLabel(campaign.followers[1]) }}</p>
+              <!--  <p>Minimum follower : {{ translateFollowerLabel(Number(campaign.followers.split(',')[0])) }}-{{ translateFollowerLabel(campaign.followers[1]) }}</p>-->
 <!--                <p>Language : <ng-container *ngFor="let ln of campaign.langs; last as isLast" >{{ campService.getLangLabel(ln) }}<ng-container *ngIf="!isLast">,</ng-container></ng-container></p>-->
                 <p>Location - <ng-container *ngFor="let ln of campaign.locationtags; last as isLast" >{{ ln }}<ng-container *ngIf="!isLast">,</ng-container></ng-container></p>
                 <p>Caption : {{ campaign.caption }}</p>

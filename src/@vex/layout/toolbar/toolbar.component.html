@@ -2,9 +2,9 @@
 <!--  <button (click)="openSidenav()" [fxHide]="!mobileQuery" mat-icon-button type="button" class="mobile-nav-btn">-->
 <!--    <mat-icon [icIcon]="icMenu" [inline]="true"></mat-icon>-->
 <!--  </button>-->
-  <div class="toolbar-logo" [routerLink]="['dashboard/home']">
+  <!--<div class="toolbar-logo" [routerLink]="['dashboard/home']">
     <img [src]="imageUrl$ | async" class="select-none flex-none default-logo">
-  </div>
+  </div>-->
   <div class="px-1 flex items-center toolbar-search">
     <button (click)="openSearch()" mat-icon-button type="button">
       <i class="icon-inf-search"></i>
@@ -19,7 +19,7 @@
       <img [src]="userService.currentUser.avatar" class="select-none flex-none mr-2 w-10">
       <div  class="body-1 font-medium leading-snug ltr:mr-3 rtl:ml-3" fxHide.xs>
         <ng-container *ngIf="userService.currentUser.type === 'advertiser'">
-          {{ userService.currentUser.company }}
+          {{ userService.currentUser.companyName }}
         </ng-container>
         <ng-container *ngIf="userService.currentUser.type === 'influencer'">
           {{ userService.currentUser.fullName }}

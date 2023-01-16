@@ -14,6 +14,7 @@ import icCancel from '@iconify/icons-ic/outline-clear';
 import {profCatsData} from '../../../../static-data/categories';
 
 import { DataService } from '../../../providers/data.service'
+import { AuthenticationService } from 'src/app/providers/authentication.service';
 
 @Component({
   selector: 'vex-user-profile',
@@ -28,6 +29,7 @@ import { DataService } from '../../../providers/data.service'
   ]
 })
 export class UserProfileComponent implements OnInit {
+  currentUser:User
   profileFormGroup: FormGroup;
   ccFormGroup: FormGroup;
   bankFormGroup: FormGroup;
@@ -45,13 +47,19 @@ export class UserProfileComponent implements OnInit {
               private route: ActivatedRoute,
               public userService: UserService,
               private router: Router,
-              public dataService: DataService) {
+              public dataService: DataService,
+              private auth:AuthenticationService) {
     this.profile = this.userService.currentUser;
   }
 
   ngOnInit(): void {
+     /*this.auth.getInfluencerByEmail(this.currentUser.email).subscribe(
+      (data)=>{
+        this.profile =data;
+      }
+     )*/
     this.profileFormGroup = this.fb.group({
-      ctrlbirth: [null],
+      ctrlbirth: [this.profile.birthDay],
       ctrlemail: [this.profile.email],
       ctrlphone: [this.profile.phone],
       fullName: [this.profile.fullName],
@@ -64,7 +72,7 @@ export class UserProfileComponent implements OnInit {
       cats: [this.profile.category],
       bio: [this.profile.bio],
       brandsite: [this.profile.brandsite],
-      company: [this.profile.company],
+      company: [this.profile.companyName],
     });
     this.ccFormGroup = this.fb.group({
       ccardNum: [null],
@@ -96,11 +104,12 @@ export class UserProfileComponent implements OnInit {
     }
   }
   saveProfile(){
+    this.profile.id = this.userService.currentUserProfile.id;
     this.profile.fullName = this.profileFormGroup.value.fullName;
     this.profile.email = this.profileFormGroup.value.ctrlemail;
     this.profile.phone = this.profileFormGroup.value.ctrlphone;
     this.profile.gender = this.profileFormGroup.value.gender;
-
+    this.profile.birthDay = this.profileFormGroup.value.ctrlbirth;
     this.profile.address1 = this.profileFormGroup.value.addressline1;
     this.profile.address2 = this.profileFormGroup.value.addressline2;
     this.profile.state = this.profileFormGroup.value.addrstate;
@@ -110,7 +119,7 @@ export class UserProfileComponent implements OnInit {
     this.profile.bankAccount = this.bankAcc;
 
     this.profile.brandsite = this.profileFormGroup.value.brandsite;
-    this.profile.company = this.profileFormGroup.value.company;
+    this.profile.companyName = this.profileFormGroup.value.company;
     this.profile.category = this.profileFormGroup.value.cats;
 
     this.profile.bio = this.profileFormGroup.value.bio;
@@ -118,19 +127,21 @@ export class UserProfileComponent implements OnInit {
     var formData: any = new FormData();
 
     if(this.profile.type == 'advertiser') {
-      formData.append('company_name', this.profile.company);
+      /*formData.append('company_name', this.profile.company);
       formData.append('about_company', this.profile.bio);
       formData.append('website', this.profile.brandsite);
-      console.log('advertiser profile edit', formData, this.profile.profileId);
-      this.dataService.updateAdvertiser(this.profile.profileId, formData)
+      console.log('advertiser profile edit', formData, this.profile.profileId);*/
+      this.dataService.updateAdvertiser(this.profile, this.profile.id)
       .pipe()
       .subscribe(cdata => {
-        console.log('update influencer', cdata);
+        console.log('update advertiser', cdata);
+        localStorage.setItem('currentUser', JSON.stringify(cdata));
+        this.userService.currentUser=JSON.parse(localStorage.getItem('currentUser'));
         this.router.navigate(['panel/user/setting']);
       });
     }
     else {
-      var gender = this.profile.gender == 'female' ? 'F' : 'M';
+      /*var gender = this.profile.gender == 'female' ? 'F' : 'M';
       var name = this.profile.fullName.split(' ');
       
       formData.append('biography', this.profile.bio);
@@ -138,12 +149,14 @@ export class UserProfileComponent implements OnInit {
       formData.append('gender', gender);
       // formData.append('categories', this.profile.category);
       formData.append('first_name', name[0]);
-      formData.append('last_name', name[1]);
+      formData.append('last_name', name[1]);*/
       
-      this.dataService.updateInfluencer(this.profile.profileId, formData)
+      this.dataService.updateInfluencer(this.profile,this.profile.id)
       .pipe()
       .subscribe(cdata => {
         console.log('update influencer', cdata);
+        localStorage.setItem('currentUser', JSON.stringify(cdata));
+        this.userService.currentUser=JSON.parse(localStorage.getItem('currentUser'));
         this.router.navigate(['panel/user/setting']);
       });
     }

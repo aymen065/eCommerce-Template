@@ -55,6 +55,6 @@ export class ToolbarNotificationsDropdownComponent implements OnInit {
   }
 
   onClickAction(id: string) {
-    this.dataService.setNotificationAction(id);
+    //this.dataService.setNotificationAction(id);
   }
 }

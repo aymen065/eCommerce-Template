@@ -51,6 +51,7 @@ export class OfferListComponent implements OnInit {
   filteredOffers$ = this.route.queryParamMap.pipe(
     map(paramMap => {
       this.activeTab = paramMap.get('filter');
+      console.log("active tab",this.activeTab);
       switch (this.activeTab) {
         case 'current': {
           this.myOfferSource.data = this.campService.offers.filter(x => x.type === 'current');
@@ -93,6 +94,7 @@ export class OfferListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.filteredOffers$);
     this.loadOfferList();
   }
 
@@ -101,6 +103,7 @@ export class OfferListComponent implements OnInit {
   }
 
   loadOfferList() {
+    console.log("my offer list hahahahahaaha",this.myOfferSource.data);
     this.campService.offersInit().then(status => {
       this.cdr.detectChanges();
 
@@ -137,16 +140,21 @@ export class OfferListComponent implements OnInit {
     const offer = this.campService.offers.find(elem => elem.id == id); // poor practice of repeating same unique && elem.type === 'pending'
     console.log('viewDetail', offer);
     const type = localStorage.getItem('type');
-    if (type === 'advertiser') {
+       this.router.navigate(['panel/offer/progress/' + offer.id ]); 
+
+    /*if (type === 'advertiser') {
       // this.dataService.getSpecificAdvertiserOffer(offer.id)
       // .pipe()
       // .subscribe((cdata : any) => {
       //   console.log('specific offer', cdata);
       //   const r = this.router.navigate(['panel/offer/progress/' + offer.id ]);
       // })
-      this.campService.getAllInfluencerListForBrand().then(status => {
+     /* this.campService.getAllInfluencerListForBrand().then(status => {
         this.router.navigate(['panel/offer/progress/' + offer.id ]); 
-      })
+      });*/
+    /*  this.router.navigate(['panel/offer/progress/' + offer.id ]); 
+
+
     }
     else {
       // this.dataService.getSpecificInfluencerOffer(offer.id)
@@ -155,10 +163,12 @@ export class OfferListComponent implements OnInit {
       //   console.log('specific offer', cdata);
       //   const r = this.router.navigate(['panel/offer/progress/' + offer.id ]);
       // }) 
-      this.campService.getAllCampaignListForInfluencer().then(status => {
+      /*this.campService.getAllCampaignListForInfluencer().then(status => {
         this.router.navigate(['panel/offer/progress/' + offer.id ]);
       })
-    }
+      this.router.navigate(['panel/offer/progress/' + offer.id ]);
+
+    }*/
     // const offer = this.campService.offers.find(elem => elem.campId == campId && elem.chatId == this.userService.currentUser.userId);
     
   }

@@ -76,8 +76,8 @@ export class ProfileViewComponent implements OnInit {
   getReviews(){
     return this.campService.reviews.filter(c => c.profile_id === this.profile.id);
   }
-  openReviewDetail(id?: Review['review_id']) {
-    const index = this.campService.reviews.findIndex((elem) => elem.review_id === id);
+  openReviewDetail(id?: Review['id']) {
+    const index = this.campService.reviews.findIndex((elem) => elem.id === id);
 
     const dialogRef = this.dialog.open(ReviewDialogComponent, {
       data: {

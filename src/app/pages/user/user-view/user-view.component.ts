@@ -19,6 +19,7 @@ import {DatePipe} from '@angular/common';
 import {Campaign} from '../../campaign/interfaces/campaign.interface';
 import {profCatsData} from '../../../../static-data/categories';
 import { DataService } from 'src/app/providers/data.service';
+import { AuthenticationService } from 'src/app/providers/authentication.service';
 
 @Component({
   selector: 'vex-review-dialog',
@@ -66,7 +67,8 @@ export class UserViewComponent implements OnInit {
               public dialog: MatDialog,
               public dataService: DataService,
               public campService: CampaignService,
-              public userService: UserService) { }
+              public userService: UserService,
+              public auth:AuthenticationService) { }
   translateFollowerLabel(value: number): string {
     const num = value / 1000;
     if (num.toString().split('.').length > 1) {
@@ -118,7 +120,7 @@ export class UserViewComponent implements OnInit {
       this.curfilter = this.filters[0];
     }
 
-    this.getListOfRatingsForAnInfluencer();
+    this.auth.getInfluencerByEmail(this.userService.currentUser.email);
   }
   openCampaign(id?: Campaign['id']) {
     const r = this.router.navigate(['panel/campaign/view/' + id]);
@@ -127,6 +129,7 @@ export class UserViewComponent implements OnInit {
     this.curfilter = filter;
     this.cd.detectChanges();
   }
+  
   getReviews(){
     return this.campService.reviews.filter(c => c.profile_id === this.profile.id);
   }
@@ -174,8 +177,8 @@ export class UserViewComponent implements OnInit {
 
     return 0;
   }
-  openReviewDetail(id?: Review['review_id']) {
-    const index = this.campService.reviews.findIndex((elem) => elem.review_id === id);
+  openReviewDetail(id?: Review['id']) {
+    const index = this.campService.reviews.findIndex((elem) => elem.id === id);
     const dialogRef = this.dialog.open(ReviewDialogComponent, {
       data: {
         review: this.campService.reviews[index]
@@ -190,7 +193,7 @@ export class UserViewComponent implements OnInit {
 
   openDetail(item){
     let format:Review = {
-      review_id: 1,
+      id: 1,
       profile_id : item.influencer,
       reviewer : '',
       review_title : item.rating_title,
@@ -198,7 +201,7 @@ export class UserViewComponent implements OnInit {
       review_date : '11/02/2020',
       summary : item.detailed_review,
       platform : '',
-      rating_values : [Number(item.cooperation), Number(item.quality), Number(item.communication), Number(item.deadline)]
+      rating_values : item.cooperation+','+item.quality+','+item.communication+','+item.deadline
     }
 
     const dialogRef = this.dialog.open(ReviewDialogComponent, {
@@ -251,8 +254,8 @@ export class UserViewComponent implements OnInit {
     return dp.transform(new Date(date), 'dd, MMM, yyyy');
   }
 
-  getListOfRatingsForAnInfluencer(){
-    this.dataService.getMyInfluencerProfile().subscribe((rep:any) =>{
+ /* getListOfRatingsForAnInfluencer(){
+    this.dataService.getMyInfluencerProfile(this.userService.currentUser).subscribe((rep:any) =>{
       let profile_id = rep.results[0].profile_uuid;
       this.dataService.getListOfRatingsForAnInfluencer(profile_id).subscribe((cdata:any) => {
         let datas = cdata.results;
@@ -260,5 +263,5 @@ export class UserViewComponent implements OnInit {
         console.log(this.ratingDatas)
       })
     })
-  }
+  }*/
 }

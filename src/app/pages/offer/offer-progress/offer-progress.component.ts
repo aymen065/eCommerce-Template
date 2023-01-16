@@ -72,16 +72,16 @@ export class OfferProgressComponent implements OnInit, AfterViewChecked {
   paymentform: FormGroup;
   ratingform: FormGroup;
   packinfo = false;
-  tags: string[] = [];
-  tags2: string[] = [];
-  lttags: string[] = [];
+  tags: string;
+  tags2: string;
+  lttags: string;
   removable = true;
   addOnBlur = true;
   selectable = true;
   changeReq = false;
   icCancel = icCancel;
   icLink = icLink;
-  numbers = [1, 2, 3, 4, 5];
+  numbers = "1,2,3,4,5";
   type: string;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -288,8 +288,7 @@ export class OfferProgressComponent implements OnInit, AfterViewChecked {
     if (this.offer.offer_progress != null) {
       this.dataService
         .postSubmission(
-          this.offer.offer_progress.submission_review.submission_uuid,
-          formData
+          this.offer
         )
         .pipe()
         .subscribe((cdata: any) => {
@@ -313,13 +312,13 @@ export class OfferProgressComponent implements OnInit, AfterViewChecked {
     return width;
   }
   calcRating() {
-    this.offer.adv_review.rating =
+   /* this.offer.adv_review.rating =
       Number(
         this.offer.adv_review.rating_values[0] +
           this.offer.adv_review.rating_values[1] +
           this.offer.adv_review.rating_values[2] +
           this.offer.adv_review.rating_values[3]
-      ) / 4;
+      ) / 4;*/
   }
   selectionChange(event) {
     this.currentStep = 'steps-' + event.selectedIndex;
@@ -343,11 +342,11 @@ export class OfferProgressComponent implements OnInit, AfterViewChecked {
 
     if ((value || '').trim()) {
       if (type === 2) {
-        this.tags2.push(value.trim());
+        this.tags2.split(',').push(value.trim());
       } else if (type === 1) {
-        this.tags.push(value.trim());
+        this.tags.split(',').push(value.trim());
       } else {
-        this.lttags.push(value.trim());
+        this.lttags.split(',').push(value.trim());
       }
     }
 
@@ -360,23 +359,26 @@ export class OfferProgressComponent implements OnInit, AfterViewChecked {
     if (type === 2) {
       const index = this.tags2.indexOf(obj);
       if (index >= 0) {
-        this.tags2.splice(index, 1);
+        this.tags2.split(',').splice(index, 1);
       }
     } else if (type === 1) {
       const index = this.tags.indexOf(obj);
       if (index >= 0) {
-        this.tags.splice(index, 1);
+        this.tags.split(',').splice(index, 1);
       }
     } else {
       const index = this.lttags.indexOf(obj);
       if (index >= 0) {
-        this.lttags.splice(index, 1);
+        this.lttags.split(',').splice(index, 1);
       }
     }
   }
   translateDate(date) {
-    const dp: DatePipe = new DatePipe('en-US');
-    return dp.transform(new Date(date), 'dd, MMM, yyyy');
+    if(date == null)
+      return null;
+   // const dp: DatePipe = new DatePipe('en-US');
+    //return dp.transform(new Date(date), 'dd, MMM, yyyy');
+    return null;
   }
   backList() {
     this.location.back();

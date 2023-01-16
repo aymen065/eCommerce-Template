@@ -22,6 +22,7 @@ import icPhone from '@iconify/icons-ic/twotone-phone';
 import { Icon } from '@visurel/iconify-angular';
 import { PopoverRef } from '../../../../components/popover/popover-ref';
 import { AuthenticationService } from 'src/app/providers/authentication.service';
+import { UserService } from 'src/app/providers/user.service';
 
 export interface OnlineStatus {
   id: 'online' | 'away' | 'dnd' | 'offline';
@@ -122,7 +123,8 @@ export class ToolbarUserDropdownComponent implements OnInit {
 
   constructor(private cd: ChangeDetectorRef,
               private popoverRef: PopoverRef<ToolbarUserDropdownComponent>,
-              private authService: AuthenticationService
+              private authService: AuthenticationService,
+              private userService:UserService
               ) { }
 
   ngOnInit() {
@@ -139,6 +141,9 @@ export class ToolbarUserDropdownComponent implements OnInit {
 
   logout() {
     this.popoverRef.close();
+    this.userService.currentUser =null;
+    this.userService.currentUserProfile = null;
     this.authService.logout();
+    
   }
 }

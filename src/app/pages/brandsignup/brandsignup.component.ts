@@ -12,6 +12,7 @@ import { first } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr'
 import {SlimLoadingBarService} from 'ng2-slim-loading-bar';
 import { AuthenticationService } from 'src/app/providers/authentication.service';
+import { Advertiser } from '../models/advertiser';
 
 @Component({
   selector: 'vex-brandsignup',
@@ -24,7 +25,7 @@ import { AuthenticationService } from 'src/app/providers/authentication.service'
 })
 export class BrandSignUpComponent implements OnInit {
   form: FormGroup;
-
+  advertiser:Advertiser
   inputType = 'password';
   visible = false;
 
@@ -66,18 +67,76 @@ export class BrandSignUpComponent implements OnInit {
         // console.log('come in');   
         this.progressbar_visible = true;
         this._loadingBar.start();
-
-        const data = { 
-          company_name: this.form.get('name').value,
-          user : {
-            email: this.form.get('email').value,
-            password: this.form.get('password').value
-          }          
-        }
+        this.advertiser = new Advertiser();
+        this.advertiser ={ 
+          
+          "companyName": this.form.get('name').value,
+            "id":0,
+            "email": this.form.get('email').value,
+            "password": this.form.get('password').value,
+            "firstName":null,
+            "lastName": null,
+            "type": 'advertiser',
+            "avatar": '../../../../assets/img/demo/profile.jpg', 
+            "phone":null,
+            "fullName":null,
+            "birthDay":null,
+            "gender":null,
+            "address1":null,
+            "address2":null,
+            "city":null,
+            "state":null,
+            "zipCode":null,
+            "category":null,
+            "bio":null ,
+            "brandsite":null, 
+            "profileId":0
+          } ;
+         
         //this.dataService.createAdvertiserAccount(data)
-        this.dataService.createNewAdvertiser(data)
+        this.dataService.createNewAdvertiser(this.advertiser)
         .pipe(first())
-        .subscribe(content => {
+        .subscribe(
+          (cdata) => {
+            //this.userService.afterLogin('advertiser');
+            if(cdata == null){  
+              this._loadingBar.complete();
+              this.toastr.error('The email that you entered has been claimed by other users. Please use a different email or contact us ','', {
+                timeOut: 3000,
+                positionClass: 'toast-bottom-right',
+                progressBar: true
+              });
+              
+              
+              
+            }else
+            {
+              
+              
+              this.userService.afterLogin('advertiser' , this.form.get('email').value);
+              //this.userService.currentUser.company = this.form.get('name').value;
+              //this.userService.currentUser.email = this.form.get('email').value;
+              
+              //this.userService.currentUser.profileId = cdata.profile_uuid;
+  
+              localStorage.setItem('type', 'advertiser');
+              this._loadingBar.complete();
+              this.router.navigate(['/panel/user/setting']);
+            }
+          }
+          ,
+        error => {
+          this._loadingBar.complete();
+          this.toastr.error('the brand you entered does not exist','', {
+            timeOut: 3000,
+            positionClass: 'toast-bottom-right',
+            progressBar: true
+          });
+        }
+        );
+
+          //dans subscribe
+          /*content => {
           this.authService.login(this.form.get('email').value, this.form.get('password').value)
           .pipe()
           .subscribe(cdata => {
@@ -100,7 +159,8 @@ export class BrandSignUpComponent implements OnInit {
             positionClass: 'toast-bottom-right',
             progressBar: true
           });
-        });
+        } */
+
         //this.router.navigate(['/panel/user/setting']);
         // this.snackbar.open('Lucky you! Looks like you didn\'t need a password or email address! For a real application we provide validators to prevent this. ;)', 'Got It!', {
         //   duration: 10000

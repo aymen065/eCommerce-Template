@@ -1,0 +1,371 @@
+<div class="wrapper-main">
+	<div class="wrapper-navbar" style="padding-top: 1%;">
+		<nav class="navbar navbar-expand navbar-light bg-light">
+			
+			<button aria-controls="navbarSupportedContent" aria-expanded="false"
+			        class="navbar-toggler"
+			        data-target="#navbarSupportedContent" data-toggle="collapse" type="button">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse row" id="navbarSupportedContent">
+				<div class="col-sm-6">
+					<ul class="navbar-nav mr-auto">
+						<li *ngIf="!isAdmin" class="nav-item" placement="bottom" >
+							<a class="nav-link" routerLink="/shop" routerLinkActive="active">
+								<fa-icon [icon]="faStore"></fa-icon>
+							</a>
+						</li>
+						<li *ngIf="!isAdmin" class="nav-item" placement="bottom" >
+							<a [tabindex]="isLoggedIn ? null : -1" class="nav-link {{isLoggedIn ? '' : 'disabled'}}"
+							   routerLink="/info"
+							   routerLinkActive="active">
+								<fa-icon [icon]="faUser"></fa-icon>
+							</a>
+						</li>
+						<li *ngIf="isAdmin" class="nav-item" placement="bottom" >
+							<a [tabindex]="isAdmin ? null : -1" class="nav-link {{isAdmin ? '' : 'disabled'}}" routerLink="/admin"
+							   routerLinkActive="active">
+								<fa-icon [icon]="faWarehouse"></fa-icon>
+							</a>
+						</li>
+						<li *ngIf="isAdmin" class="nav-item" placement="bottom" >
+							<a [tabindex]="isAdmin ? null : -1" class="nav-link {{isAdmin ? '' : 'disabled'}}" routerLink="/summary"
+							   routerLinkActive="active">
+								<fa-icon [icon]="faChartLine"></fa-icon>
+							</a>
+						</li>
+						<li class="nav-item" placement="bottom" >
+							<a class="nav-link" routerLink="/contact" routerLinkActive="active">
+								<fa-icon [icon]="faHandshake"></fa-icon>
+							</a>
+						</li>
+						<li *ngIf="isTest" class="nav-item" placement="bottom" >
+							<a class="nav-link" routerLink="/test" routerLinkActive="active">
+								<fa-icon [icon]="faCubes"></fa-icon>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<div class="col-sm-6">
+					<div class="responsive-float">
+						
+						<button  class="btn btn-dark btn-lang"
+						        placement="bottom" 
+								(click)="openCartModal(cartTemplate)"
+								tooltip="shopping cart">
+							<fa-icon [icon]="faShoppingCart"></fa-icon>
+							<span> ({{countAddedProduct}})</span>
+						</button>
+						<button  class="btn btn-dark"
+						        placement="bottom" (click)="login()"
+								tooltip="Login">
+							<fa-icon [icon]="faSignInAlt"></fa-icon>
+						</button>
+						
+					</div>
+				</div>
+				
+			</div>
+		</nav>
+	</div>
+<div class="wrapper-store" style="padding-top: 3%;" >
+	<div class="wrapper-product">
+		<div class="wrapper-filter">
+			<div class="form-row">
+				
+				<div class="form-group col-xl-2 col-lg-2 col-md-2 col-sm-3 col-3">
+					<select (change)="onChangeCategory('search'); onSearch()" [(ngModel)]="searchForm.categoryName"
+					        class="form-control">
+						<option *ngFor="let category of categories"
+						        [value]="category.name">{{category.name }}</option>
+					</select>
+				</div>
+				<div class="form-group col-xl-2 col-lg-2 col-md-2 col-sm-3 col-3">
+					<select (change)="onChangeTypeSearch(); onSearch()" [(ngModel)]="searchForm.typeName" class="form-control">
+						<ng-container *ngFor="let type of types">
+							<option *ngIf="type.categoryName === searchForm.categoryName"
+							        [value]="type.name">{{type.name }}</option>
+						</ng-container>
+					</select>
+				</div>
+				<div class="form-group col-xl-1 col-lg-1 col-md-1 col-sm-3 col-3">
+					<button (click)="onSearch()" class="btn btn-dark" placement="bottom"
+					        >
+						<fa-icon [icon]="faSearch"></fa-icon>
+					</button>
+				</div>
+				<div class="form-group col-xl-3 col-lg-3 col-md-3 col-sm-8 col-8">
+					<pagination (pageChanged)="onPageChanged($event)"
+					            [(ngModel)]="pagination.currentPage"
+					            [boundaryLinks]="true"
+					            [itemsPerPage]="pagination.itemPerPage"
+					            [maxSize]="pagination.maxSize"
+					            [pageBtnClass]="'btn-outline-dark'"
+					            [totalItems]="pagination.totalItem"
+					            class="" firstText="&laquo;" lastText="&raquo;" nextText="&rsaquo;"
+					            previousText="&lsaquo;">
+					</pagination>
+				</div>
+				<div class="form-group col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1">
+					<button (click)="onSortPrice()" class="btn btn-dark responsive-float"
+					        placement="bottom" 
+							tooltip="Sort by price">
+						<fa-icon *ngIf="sortFlip" [icon]="faSortAmountUp"></fa-icon>
+						<fa-icon *ngIf="!sortFlip" [icon]="faSortAmountDownAlt"></fa-icon>
+					</button>
+				</div>
+				<div class="form-group col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1">
+					
+					<button (click)="openLoginModal(loginTemplate)" *ngIf="!isLoggedIn" class="btn btn-dark"
+						        placement="bottom" tooltip="login">
+							<b>Admin</b>
+						</button>
+				</div>
+				
+				
+				<div class="form-group col-xl-1 col-lg-1 col-md-1 col-sm-3 col-3">
+					<select (change)="paging(searchResults)" [(ngModel)]="pagination.itemPerPage"
+					        class="btn btn-outline-dark responsive-float" placement="bottom"
+					        >
+						<option *ngFor="let val of [6, 12, 24, 48, 96]; let i = index" [selected]="i === 0"
+						        [value]="val">{{val}}</option>
+					</select>
+				</div>
+				<div class="form-group col-xl-2 col-lg-2 col-md-2 col-sm-3 col-3">
+				</div>
+			</div>
+		</div>
+		<div class="container-fluid">
+			<div *ngIf="displayProducts.length != 0" class="row" style="margin:5% 0 1% 1% ;">
+				<div *ngFor="let product of displayProducts; trackBy: trackByFn; let i = index"
+				     class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 card-group mb-2 px-1">
+					<div class="card">
+						<div class="card-header {{bgPrimary}} {{tcPrimary}}"><b>{{product.name}}</b></div>
+						<div class="card-body">
+							<img (click)="onOpenImage(i)" [alt]="product.name" [src]="product.imgUrl" class="card-img-top">
+						</div>
+						<div class="card-footer {{bgPrimary}} {{tcPrimary}}">
+							<span class="float-left">{{product.price}} $</span>
+							<span class="float-right">
+								<button (click)="addProduct(product.id)" class="btn btn-dark" placement="bottom"
+								        >
+									<fa-icon [icon]="faCartPlus"></fa-icon>
+								</button>
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="displayProducts.length == 0" class="emptyListSpan">
+				<span  >
+					<img class="emptyListImg" src="../../../assets/img/noCurrentOffer.png">
+					
+					 no product found at the moment...
+				</span>			</div>
+		</div>
+	</div>
+</div>
+<ng-template #cartTemplate>
+	<div class="modal-header {{bgPrimary}} {{tcPrimary}}">
+		<h4 class="modal-title pull-left"></h4>
+		<button (click)="modalRef.hide()" class="close pull-right">
+			<span aria-hidden="true" class="{{tcPrimary}}">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body table-responsive wrapper-cart-table">
+		<table class="table table-bordered table-striped table-sm table-hover text-center">
+			<thead class="{{bgPrimary}} {{tcPrimary}}">
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col">Name</th>
+				<th scope="col">Category</th>
+				<th scope="col">Type</th>
+				<th scope="col">Price</th>
+				<th scope="col">Quantity</th>
+				<th scope="col">Total Price</th>
+				<th class="col-hoverable" scope="col">
+					<fa-icon (click)="cancelAndDecreaseItem(-1)" [icon]="faMinus"></fa-icon>
+				</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr *ngFor="let product of addedProducts; let i = index">
+				<th scope="row">{{i + 1}}</th>
+				<td>{{product.name}}</td>
+				<td>{{ product.categoryName }}</td>
+				<td>{{ product.typeName }}</td>
+				<td>{{product.price}}</td>
+				<td>{{countOfIndividualProduct[i]}}</td>
+				<td>{{totalPriceOfIndividualProduct[i]}}</td>
+				<td>
+					<fa-icon (click)="increaseItem(i)" [icon]="faPlus"></fa-icon>&nbsp;
+					<fa-icon (click)="cancelAndDecreaseItem(i)" [icon]="faMinus"></fa-icon>
+				</td>
+			</tr>
+			<tr *ngIf="addedProducts.length != 0">
+				<td colspan="6"><b>total price</b></td>
+				<td><b>{{totalPriceOfAddedProduct}}</b></td>
+				<td></td>
+			</tr>
+			<tr *ngIf="addedProducts.length == 0">
+				<td colspan="8"><i>no product found</i></td>
+			</tr>
+			</tbody>
+		</table>
+		<div class="personal-info">
+			<div class="form-group row">
+				<label class="col-sm-4 col-form-label" for="inputPhoneC"><b>Phone Number</b></label>
+				<div class="col-sm-8">
+					<input [(ngModel)]="cartForm.phone" class="form-control" id="inputPhoneC" type="text">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-sm-4 col-form-label" for="inputAddressC"><b>Detail address</b></label>
+				<div class="col-sm-8">
+					<input [(ngModel)]="cartForm.address" class="form-control" id="inputAddressC" type="text">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-sm-4 col-form-label" for="inputCityC"><b>City</b></label>
+				<div class="col-sm-8">
+					<select [(ngModel)]="cartForm.city" class="form-control" id="inputCityC">
+						<option *ngFor="let city of cities" [value]="city.name">{{city.name}}</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-sm-4 col-form-label" for="inputDistrictC"><b>District</b></label>
+				<div class="col-sm-8">
+					<select [(ngModel)]="cartForm.district" class="form-control" id="inputDistrictC">
+						<ng-container *ngFor="let district of districts">
+							<option *ngIf="district.cityName === cartForm.city"
+							        [value]="district.name">{{district.name}}</option>
+						</ng-container>
+					</select>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer bg-light">
+		<button (click)="onSettle()" class="btn btn-success pull-right">Confirmer</button>
+	</div>
+</ng-template>
+<ng-template #loginTemplate>
+	<div class="modal-header {{bgPrimary}} {{tcPrimary}}">
+		<h4 class="modal-title pull-left">login</h4>
+		<button (click)="this.modalRef.hide()" class="close pull-right">
+			<span aria-hidden="true" class="{{tcPrimary}}">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<div class="form-group row">
+			<label class="col-sm-4 col-form-label" for="inputEmail"><b>Email</b></label>
+			<div class="col-sm-8">
+				<input [(ngModel)]="loginForm.email" class="form-control" id="inputEmail" type="email">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-4 col-form-label" for="inputPassword"><b>Password</b></label>
+			<div class="col-sm-8">
+				<input  [(ngModel)]="loginForm.password" class="form-control" id="inputPassword"
+				       type="password">
+			</div>
+		</div>
+		
+	</div>
+	<div class="modal-footer bg-light">
+		<button (click)="onLogin()" class="btn btn-success pull-right">login</button>
+		<button (click)="openSignUpModal(signUpTemplate)"
+		        class="btn btn-primary pull-right">signUp</button>
+	</div>
+</ng-template>
+
+<ng-template #signUpTemplate>
+	<div class="modal-header {{bgPrimary}} {{tcPrimary}}">
+		<h4 class="modal-title pull-left">signUp</h4>
+		<button (click)="modalRef.hide()" class="close pull-right">
+			<span aria-hidden="true" class="{{tcPrimary}}">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<div class="form-group row">
+			<label class="col-sm-4 col-form-label" for="inputNameS"><b>Name</b></label>
+			<div class="col-sm-8">
+				<input [(ngModel)]="signUpForm.name" class="form-control" id="inputNameS" type="text">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-4 col-form-label" for="inputEmailS"><b>Email</b></label>
+			<div class="col-sm-8">
+				<input [(ngModel)]="signUpForm.email" class="form-control" id="inputEmailS" type="email">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-4 col-form-label" for="inputReEmailS"><b>Re-Email</b></label>
+			<div class="col-sm-8">
+				<input [(ngModel)]="signUpForm.reEmail" class="form-control" id="inputReEmailS" type="email">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-4 col-form-label" for="inputPasswordS"><b>Password</b></label>
+			<div class="col-sm-8">
+				<input [(ngModel)]="signUpForm.password" class="form-control" id="inputPasswordS" type="password">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-4 col-form-label" for="inputRePasswordS"><b>Re-password</b></label>
+			<div class="col-sm-8">
+				<input [(ngModel)]="signUpForm.rePassword" class="form-control" id="inputRePasswordS" type="password">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-4 col-form-label" for="inputAnswerS"><b>answer</b></label>
+			<div class="col-sm-8">
+				<input [(ngModel)]="signUpForm.answer" class="form-control" id="inputAnswerS" type="password">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-4 col-form-label" for="inputReAnswerS"><b>Re-answer</b></label>
+			<div class="col-sm-8">
+				<input [(ngModel)]="signUpForm.reAnswer" class="form-control" id="inputReAnswerS" type="password">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-4 col-form-label" for="inputPhoneS"><b>Phone</b></label>
+			<div class="col-sm-8">
+				<input [(ngModel)]="signUpForm.phone" class="form-control" id="inputPhoneS" type="text">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-4 col-form-label" for="inputAddressS"><b>Adress</b></label>
+			<div class="col-sm-8">
+				<input [(ngModel)]="signUpForm.address" class="form-control" id="inputAddressS" type="text">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-4 col-form-label" for="inputCityS"><b>City</b></label>
+			<div class="col-sm-8">
+				<select [(ngModel)]="signUpForm.city" class="form-control" id="inputCityS">
+					<option *ngFor="let city of cities" [value]="city.name">{{city.name}}</option>
+				</select>
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-4 col-form-label" for="inputDistrictS"><b>District</b></label>
+			<div class="col-sm-8">
+				<select [(ngModel)]="signUpForm.district" class="form-control" id="inputDistrictS">
+					<ng-container *ngFor="let district of districts">
+						<option *ngIf="district.cityName === signUpForm.city"
+						        [value]="district.name">{{district.name}}</option>
+					</ng-container>
+				</select>
+			</div>
+		</div>
+		
+	</div>
+	<div class="modal-footer bg-light">
+		<button  class="btn btn-success pull-right">signUp</button>
+		<button  class="btn btn-dark pull-right">Refresh</button>
+	</div>
+</ng-template>
+</div>

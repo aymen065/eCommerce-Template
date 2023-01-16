@@ -20,6 +20,7 @@ import {MatAccordion} from '@angular/material/expansion';
 import {checkMatch} from '../../../helpers/match.validator';
 import {Campaign} from '../interfaces/campaign.interface';
 import {Router} from '@angular/router';
+import { UserService } from 'src/app/providers/user.service';
 
 @Component({
   selector: 'vex-campaign-new',
@@ -96,7 +97,8 @@ export class CampaignNewComponent implements OnInit {
               private cd: ChangeDetectorRef,
               private snackbar: MatSnackBar,
               private router: Router,
-              public campService: CampaignService) {
+              public campService: CampaignService,
+              private userService:UserService) {
     this.bankAcc = {
       type: '',
       routing: '',
@@ -106,22 +108,22 @@ export class CampaignNewComponent implements OnInit {
     this.currentStep = 'steps-0';
     this.campaign = {
       name: '',
-      category: [],
+      category: '',
       budget: 0,
       coverImg: '',
-      platform: [],
-      placement: [],
+      platform: '',
+      placement: '',
       requirement: '',
-      locationtags: [],
-      tags: [],
-      tags2: [],
-      ages: [],
-      gallery: [],
-      followers: [],
+      locationtags: '',
+      tags: '',
+      tags2: '',
+      ages: '',
+      gallery: '',
+      followers: '',
       gender: '',
       city: '',
       country: '',
-      langs: [],
+      langs: '',
       billingName: '',
       billingAddress1: '',
       billingAddress2: '',
@@ -160,6 +162,10 @@ export class CampaignNewComponent implements OnInit {
     }
   }
   ngOnInit(): void {
+    this.userService.currentUser=JSON.parse(localStorage.getItem('currentUser'));
+
+   // this.userService.afterLogin(this.userService.currentUser.type,this.userService.currentUser.email);
+    //console.log(JSON.parse(localStorage.getItem('currentUser')));
     this.prodserviceGroup = this.fb.group({
       servicename: [null, Validators.required],
       budget: [null],
@@ -183,7 +189,8 @@ export class CampaignNewComponent implements OnInit {
       galleryImg_4: [null],
       galleryImg_5: [null],
       infquests: [null, Validators.required],
-      contents: [null, Validators.required],
+      //contents: [null, Validators.required],
+      contents: null,
     });
     this.influencersGroup = this.fb.group({
       gender: [null],
@@ -273,14 +280,14 @@ export class CampaignNewComponent implements OnInit {
   proceedServiceForm() {
     this.campaign.name = this.prodserviceGroup.value.servicename;
     this.campaign.coverImg = this.prodserviceGroup.value.coverImg;
-    this.campaign.category = this.prodserviceGroup.value.category;
+    this.campaign.category = this.tabtoString(this.prodserviceGroup.value.category);
     this.campaign.description = this.prodserviceGroup.value.description;
     this.campaign.budget = this.prodserviceGroup.value.budget;
   }
 
   proceedBriefForm() {
-    this.campaign.platform = this.briefingGroup.value.platform;
-    this.campaign.placement = this.briefingGroup.value.placement;
+    this.campaign.platform = this.tabtoString(this.briefingGroup.value.platform);
+    this.campaign.placement = this.tabtoString(this.briefingGroup.value.placement);
 
     let req: string = '';
     this.influencers.forEach(it => {
@@ -306,26 +313,26 @@ export class CampaignNewComponent implements OnInit {
       this.campaign.periodEnd = datepipe.transform(new Date(this.briefingGroup.value.periodEnd), 'MM.dd.yyyy');
     }
     this.campaign.caption = this.briefingGroup.value.caption;
-    this.campaign.tags = this.tags;
-    this.campaign.tags2 = this.tags2;
-    this.campaign.locationtags = this.lttags;
-    this.campaign.quests = this.briefingGroup.value.infquests;
-    this.campaign.contents = this.briefingGroup.value.contents;
-    this.campaign.gallery = [
+    this.campaign.tags = this.tabtoString(this.tags);
+    this.campaign.tags2 = this.tabtoString(this.tags2);
+    this.campaign.locationtags = this.tabtoString(this.lttags);
+    this.campaign.quests = this.tabtoString(this.briefingGroup.value.infquests);
+    this.campaign.contents = this.tabtoString(this.briefingGroup.value.contents);
+    /*this.campaign.gallery = this.tabtoString([
       this.briefingGroup.value.galleryImg_1 ? this.briefingGroup.value.galleryImg_1 : '',
       this.briefingGroup.value.galleryImg_2 ? this.briefingGroup.value.galleryImg_2 : '',
       this.briefingGroup.value.galleryImg_3 ? this.briefingGroup.value.galleryImg_3 : '',
       this.briefingGroup.value.galleryImg_4 ? this.briefingGroup.value.galleryImg_4 : '',
       this.briefingGroup.value.galleryImg_5 ? this.briefingGroup.value.galleryImg_5 : ''
-    ];
+    ]);*/
   }
   proceedInfluenForm() {
     this.campaign.gender = this.influencersGroup.value.gender;
-    this.campaign.ages = this.influencersGroup.value.ages;
-    this.campaign.followers = this.influencersGroup.value.followers;
+    this.campaign.ages = this.tabtoString(this.influencersGroup.value.ages);
+    this.campaign.followers = this.tabtoString(this.influencersGroup.value.followers);
     this.campaign.country = this.influencersGroup.value.country;
     this.campaign.city = this.influencersGroup.value.city;
-    this.campaign.langs = this.influencersGroup.value.langs;
+    this.campaign.langs = this.tabtoString(this.influencersGroup.value.langs);
   }
   proceedBillingForm() {
     this.campaign.billingName = this.submitGroup.value.fullname;
@@ -496,4 +503,12 @@ export class CampaignNewComponent implements OnInit {
       this.briefingGroup.get('galleryImg_1').setValue(file);
     }
   }
+  tabtoString(tab :string[]){
+    var str = '';
+    tab.forEach(e => {
+        str+=e+',';
+    });
+    
+    return str;
+}
 }

@@ -246,7 +246,7 @@ export class UserSocialComponent implements OnInit {
         .pipe()
         .subscribe(data => {
           // console.log('backend',data);
-          this.dataService.getMyInfluencerProfile().pipe().subscribe((content:any) => {
+          this.dataService.getMyInfluencerProfile(this.userService.currentUser).pipe().subscribe((content:any) => {
             console.log('after login with Insta',content);
             if(content.results[0].social_media_platforms != null) {
               for(let ii = 0; ii < content.results[0].social_media_platforms.length; ii ++) {
@@ -437,7 +437,7 @@ export class UserSocialComponent implements OnInit {
         .pipe(first())
         .subscribe(data => {
           // console.log('backend',data);
-          this.dataService.getMyInfluencerProfile().pipe().subscribe(content => {
+          this.dataService.getMyInfluencerProfile(this.userService.currentUser).pipe().subscribe(content => {
             console.log('after login with FB',content);
           })
         },

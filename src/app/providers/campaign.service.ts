@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {Campaign} from '../pages/campaign/interfaces/campaign.interface';
-import {campaignsData} from '../../static-data/campaigns';
 import {categoriesData} from '../../static-data/categories';
 import {platformsData} from '../../static-data/platforms';
 import {placementData} from '../../static-data/placement';
@@ -29,13 +28,13 @@ export interface Offer {
     profile_id?: number;
     post_img?: string;
     caption?: string;
-    locationtags?: string[];
-    tags?: string[];
-    tags2?: string[];
+    locationtags?: string;
+    tags?: string;
+    tags2?: string;
     editable?: boolean;
     offer_progress?: any;
-    platform?: string[];
-    placement?: string[];
+    platform?: string;
+    placement?: string;
     requirement: string;
 
     type?: string;
@@ -151,6 +150,7 @@ export class CampaignService {
     }
 
     getFavoriteInfluencerListForBrand() {
+
         return new Promise((resolve) => {
             this.favoriteProfiles = [];
             this.dataService.retrieveInfluencerToFavoriteList().subscribe((cdata: any) => {
@@ -382,7 +382,8 @@ export class CampaignService {
                     .pipe()
                     .subscribe(cdata => {
                         console.log('offer list advertiser', cdata);
-                        this.getOfferList(cdata);
+                        //this.getOfferList(cdata);
+                        this.offers=cdata._embedded.offers;
                         resolve(true);
                     });
             })
@@ -390,9 +391,17 @@ export class CampaignService {
             return new Promise((resolve) => {
                 this.dataService.getOfferListByInfluencer()
                     .pipe()
-                    .subscribe(cdata => {
+                    .subscribe((cdata) => {
+
+                        
+                        
+                       // this.getOfferList(cdata);
+                       this.offers=cdata._embedded.offers;
                         console.log('offer list influencer', cdata);
-                        this.getOfferList(cdata);
+                        /*cdata._embedded.offers.forEach(e=>
+                            console.log("element",e)
+                        );*/
+                        console.log('static offers', this.offers);
                         resolve(true);
                     });
             })
@@ -400,9 +409,10 @@ export class CampaignService {
     }
 
     getOfferList(cdata) {
-        for (let i = 0; i < cdata.results.length; i++) {
+
+        for (let i = 0; i < 8; i++) {
             var offer: Offer = {
-                id: 1,
+                id: i,
                 chatId: 1,
                 campId: 1,
                 accept_date: '11/02/2020',
@@ -414,12 +424,12 @@ export class CampaignService {
                 profile_id: 2,
                 post_img: 'assets/img/demo/post-1.png',
                 caption: 'She is very kind and takes beautiful pictures. I want to work with her again!',
-                locationtags: ['chicago'],
-                tags: ['fashion'],
-                tags2: ['nike'],
+                locationtags: 'chicago',
+                tags: 'fashion',
+                tags2: 'nike',
                 editable: false,
                 adv_review: {
-                    review_id: 1,
+                    id: 1,
                     profile_id: 7,
                     reviewer: 'Hyebin Seong',
                     review_date: '09/02/2020',
@@ -427,28 +437,29 @@ export class CampaignService {
                     summary: 'She is very kind and takes beautiful pictures. I want to work with her again! She is very kind and takes beautiful pictures. I want to work with her again!',
                     rating: 4.7,
                     platform: 'facebook',
-                    rating_values: [5, 4, 5, 5],
+                    rating_values: "[5,4,5,5",
                 },
                 offer_progress: null,
-                platform: ['instagram', 'facebook'],
-                placement: ['feed', 'story'],
+                platform: "instagram,facebook",
+                placement: "feed,story",
                 requirement: 'test',
             };
-            offer.id = cdata.results[i].offer_uuid;
-            offer.chatId = cdata.results[i].received_by;
-            offer.campId = cdata.results[i].campaign;
-            offer.accept_date = cdata.results[i].accepted_at;
-            offer.status = cdata.results[i].progress.toLowerCase();
-            offer.offer_progress = cdata.results[i].offer_progress;
+            //offer.id = cdata[i].offer_uuid;
+            //offer.chatId = cdata[i].received_by;
+            //offer.campId = cdata[i].campaign;
+            //offer.accept_date = cdata[i].accepted_at;
+            //offer.status = cdata[i].progress.toLowerCase();
+            //offer.offer_progress = cdata._embedded.offers[i].offer_progress;
 
-            offer.type = cdata.results[i].type.toLowerCase();
-            offer.camp_name = cdata.results[i].campaign_name;
-            offer.budget = cdata.results[i].budget;
-
+            //offer.type = cdata.results[i].type.toLowerCase();
+            //offer.camp_name = cdata[i].campaign_name;
+           // offer.budget = cdata._embedded.offers[i].budget;
+           offer.budget = "200";
             this.offers.push(offer);
 
             // console.log('offers', this.offers);
         }
+        //console.log('offers',cdata.);
 
     }
 
@@ -457,16 +468,19 @@ export class CampaignService {
             this.campList = [];
 
             this.dataService.retrieveFavoritedCampaignsList().subscribe(async (favorites: any) => {
-                if (favorites.favorite_campaigns) {
-                    const favorite_list = favorites.favorite_campaigns;
+                //favorites.favorite_campaigns
+                if (true) {
+                    //const favorite_list = favorites.favorite_campaigns;
 
-                    const mylist:any = await this.dataService.retrieveCampaignToMyList().toPromise();
-                    const mylist_campaigns = mylist.mylist_campaigns;
+                    //const mylist:any = await this.dataService.retrieveCampaignToMyList().toPromise();
+                    //const mylist_campaigns = mylist.mylist_campaigns;
 
-                    console.log("MY LIST", mylist_campaigns);
+                    //console.log("MY LIST", mylist_campaigns);
 
                     this.dataService.getCampaignList().subscribe(cdata => {
-                        if (cdata['results']) {
+                        this.campList = cdata;
+                        console.log(this.campList);
+                        /*if (cdata['results']) {
                             let all_list = cdata['results'].filter((item: any) => {
                                 return !favorite_list.some((favorite: any) => favorite.campaign_uuid === item.campaign_uuid)
                                 && !mylist_campaigns.some((listItem: any) => listItem.campaign_uuid === item.campaign_uuid)
@@ -476,26 +490,26 @@ export class CampaignService {
                                 let camp: Campaign = {
                                     id: 2,
                                     name: 'Nike Running Shoes',
-                                    category: ['fashion', 'travel', 'sports'],
+                                    category: this.tabtoString(['fashion', 'travel', 'sports']),
                                     budget: 100,
                                     coverImg: 'assets/img/demo/product07-01.jpg',
-                                    platform: ['instagram', 'facebook'],
-                                    placement: ['feed', 'story'],
+                                    platform: this.tabtoString(['instagram', 'facebook']),
+                                    placement: this.tabtoString(['feed', 'story']),
                                     requirement: 'test',
                                     caption: 'adf',
-                                    tags: ['nike'],
-                                    tags2: ['fashion'],
-                                    ages: [30, 60],
-                                    followers: [2000, 4500],
+                                    tags: this.tabtoString(['nike']),
+                                    tags2: this.tabtoString(['fashion']),
+                                    ages: this.tabtoString(['30', '60']),
+                                    followers: this.tabtoString(['2000', '4500']),
                                     periodStart: '09/02/2020',
                                     periodEnd: '09/09/2020',
-                                    gallery: ['assets/img/demo/product07-02.jpg', 'assets/img/demo/product07-03.jpg', 'assets/img/demo/product07-04.jpg', '', ''],
+                                    gallery: this.tabtoString(['assets/img/demo/product07-02.jpg', 'assets/img/demo/product07-03.jpg', 'assets/img/demo/product07-04.jpg', '', '']),
                                     gender: 'male',
                                     city: '',
                                     country: '',
-                                    quests: [1],
-                                    contents: [2],
-                                    langs: ['en'],
+                                    quests: this.tabtoString(['1']),
+                                    contents: this.tabtoString(['2']),
+                                    langs: this.tabtoString(['en']),
                                     billingName: '',
                                     billingAddress1: '',
                                     billingAddress2: '',
@@ -513,8 +527,8 @@ export class CampaignService {
                                 this.campList.push(camp);
                             }
                             console.log('camp list', this.campList);
-                        }
-                        resolve(true);
+                        }*/
+                       // resolve(true);
                     })
                 }
             });
@@ -536,26 +550,26 @@ export class CampaignService {
                         let camp: Campaign = {
                             id: 2,
                             name: 'Nike Running Shoes',
-                            category: ['fashion', 'travel', 'sports'],
+                            category: this.tabtoString(['fashion', 'travel', 'sports']),
                             budget: 100,
                             coverImg: 'assets/img/demo/product07-01.jpg',
-                            platform: ['instagram', 'facebook'],
-                            placement: ['feed', 'story'],
+                            platform: this.tabtoString(['instagram', 'facebook']),
+                            placement: this.tabtoString(['feed', 'story']),
                             requirement: 'test',
                             caption: 'adf',
-                            tags: ['nike'],
-                            tags2: ['fashion'],
-                            ages: [30, 60],
-                            followers: [2000, 4500],
+                            tags: this.tabtoString(['nike']),
+                            tags2: this.tabtoString(['fashion']),
+                            ages: this.tabtoString(['30', '60']),
+                            followers: this.tabtoString(['2000', '4500']),
                             periodStart: '09/02/2020',
                             periodEnd: '09/09/2020',
-                            gallery: ['assets/img/demo/product07-02.jpg', 'assets/img/demo/product07-03.jpg', 'assets/img/demo/product07-04.jpg', '', ''],
+                            gallery: this.tabtoString(['assets/img/demo/product07-02.jpg', 'assets/img/demo/product07-03.jpg', 'assets/img/demo/product07-04.jpg', '', '']),
                             gender: 'male',
                             city: '',
                             country: '',
-                            quests: [1],
-                            contents: [2],
-                            langs: ['en'],
+                            quests: this.tabtoString(['1']),
+                            contents: this.tabtoString(['2']),
+                            langs: this.tabtoString(['en']),
                             billingName: '',
                             billingAddress1: '',
                             billingAddress2: '',
@@ -563,7 +577,7 @@ export class CampaignService {
                             billingCity: '',
                             billingZipcode: '',
                             description: 'Showing face, Picture wearing  a product',
-                            favorite: true,
+                            favorite: false,
                         };
 
                         camp.id = favorite_list[i].campaign_uuid;
@@ -591,26 +605,26 @@ export class CampaignService {
                         let camp: Campaign = {
                             id: 2,
                             name: 'Nike Running Shoes',
-                            category: ['fashion', 'travel', 'sports'],
+                            category: this.tabtoString(['fashion', 'travel', 'sports']),
                             budget: 100,
                             coverImg: 'assets/img/demo/product07-01.jpg',
-                            platform: ['instagram', 'facebook'],
-                            placement: ['feed', 'story'],
+                            platform: this.tabtoString(['instagram', 'facebook']),
+                            placement: this.tabtoString(['feed', 'story']),
                             requirement: 'test',
                             caption: 'adf',
-                            tags: ['nike'],
-                            tags2: ['fashion'],
-                            ages: [30, 60],
-                            followers: [2000, 4500],
+                            tags: this.tabtoString(['nike']),
+                            tags2: this.tabtoString(['fashion']),
+                            ages: this.tabtoString(['30', '60']),
+                            followers: this.tabtoString(['2000', '4500']),
                             periodStart: '09/02/2020',
                             periodEnd: '09/09/2020',
-                            gallery: ['assets/img/demo/product07-02.jpg', 'assets/img/demo/product07-03.jpg', 'assets/img/demo/product07-04.jpg', '', ''],
+                            gallery: this.tabtoString(['assets/img/demo/product07-02.jpg', 'assets/img/demo/product07-03.jpg', 'assets/img/demo/product07-04.jpg', '', '']),
                             gender: 'male',
                             city: '',
                             country: '',
-                            quests: [1],
-                            contents: [2],
-                            langs: ['en'],
+                            quests: this.tabtoString(['1']),
+                            contents: this.tabtoString(['2']),
+                            langs: this.tabtoString(['en']),
                             billingName: '',
                             billingAddress1: '',
                             billingAddress2: '',
@@ -618,7 +632,7 @@ export class CampaignService {
                             billingCity: '',
                             billingZipcode: '',
                             description: 'Showing face, Picture wearing  a product',
-                            favorite: true,
+                            favorite: false,
                         };
 
                         camp.id = mylist_campaigns[i].campaign_uuid;
@@ -814,38 +828,38 @@ export class CampaignService {
     addNewCampaign(camp: Campaign) {
 
         console.log('new camp', camp);
-        var formData: any = new FormData();
-        formData.append('campaign_title', camp.name);
+       // var formData: any = new FormData();
+       /* formData.append('campaign_title', camp.name);
         formData.append('campaign_description', camp.description);
         formData.append('requirements', camp.requirement);
         formData.append('location_tags', camp.locationtags);
         formData.append('tags', camp.tags);
-        formData.append('caption', camp.caption); //todo
+        formData.append('caption', camp.caption); //todo*/
         // formData.append('age_range', JSON.stringify(camp.ages));
         console.log(this.dataURIToBlob(camp.coverImg))
-        formData.append('cover_image', this.dataURIToBlob(camp.coverImg), 'image.png')
-        for (let i = 0; i < camp.gallery.length; i++) {
+        //formData.append('cover_image', this.dataURIToBlob(camp.coverImg), 'image.png')
+        /*for (let i = 0; i < camp.gallery.length; i++) {
             if (camp.gallery[i] !== '') {
                 formData.append(`files[${i}]`, this.dataURIToBlob(camp.gallery[i]), `gallery${i}.png`);
             }
-        }
+        }*/
 
-        console.log('new camp formdata', formData);
+        //console.log('new camp formdata', formData);
         // formData.append('followers_range', camp.followers);
         // formData.append('')
 
-        formData.append('budget', Math.round(camp.budget));
+       /* formData.append('budget', Math.round(camp.budget));
         if (camp.periodStart != null && camp.periodEnd != null) {
             formData.append('start_date', this.formatDate(camp.periodStart));
             formData.append('end_date', this.formatDate(camp.periodEnd));
-        }
+        }*/
         // else {
         //     formData.append('start_date', '');
         //     formData.append('end_date', '');
         // }
-        formData.append('images', camp.gallery);
+        //formData.append('images', camp.gallery);
         // console.log('add new camp', camp);
-        this.dataService.createCampaign(formData)
+        this.dataService.createCampaign(camp)
             .pipe()
             .subscribe((cdata: any) => {
                 console.log('create campaign', cdata);
@@ -871,7 +885,7 @@ export class CampaignService {
 
     makeCriteria(camp: Campaign) {
         let content = 'Age: ' + camp.ages[0] + '-' + camp.ages[1] + '\n'
-            + 'Minimum follower: ' + this.translateFollowerLabel(camp.followers[0]) + '-' + this.translateFollowerLabel(camp.followers[1])
+           // + 'Minimum follower: ' + this.translateFollowerLabel(camp.followers[0]) + '-' + this.translateFollowerLabel(camp.followers[1])
             + 'Location - ' + camp.locationtags + '\n'
             + 'Caption: ' + camp.caption;
         return content;
@@ -1071,5 +1085,13 @@ export class CampaignService {
             }
         this.dataService.removeInfluencerFromMyList(favorite_id, details).pipe().subscribe((response: any) => {
         })
+    }
+
+    tabtoString(tab :string[]){
+        var str = '';
+        tab.forEach(e => {
+            str+=e+',';
+        });
+        return str;
     }
 }
