@@ -1,0 +1,3 @@
+FROM nginx:alpine
+COPY eCommerce-Template/dist/vex /usr/share/nginx/html
+COPY eCommerce-Template/nginx.conf /etc/nginx/nginx.conf
